@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   tableBody: {
     flex: 9,
     flexDirection: "row",
-    padding: 10,
+    paddingHorizontal: 10,
     backgroundColor: colors.tableBackground,
   },
   upDownView: {
