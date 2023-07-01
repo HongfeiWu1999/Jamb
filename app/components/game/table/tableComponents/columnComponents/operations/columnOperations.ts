@@ -62,10 +62,22 @@ const getRepeatedNumber = (numbers: number[], n: number): number => {
   return result ? result : 0;
 };
 
+const isSequentialNumbers = (numbers: number[]): boolean => {
+  for (let i = 1; i < numbers.length; i++) {
+    if (numbers[i] - numbers[i - 1] !== 1) {
+      return false;
+    }
+  }
+  return true;
+};
+
 const getKento = (numbers: number[], opportunities: number): number => {
-  const isValid = [...new Set(numbers)].length >= 5;
-  if (isValid) {
+  const uniques = [...new Set(numbers)];
+  if (uniques.length === 6) {
     return 46 + opportunities * 10;
+  } else if (uniques.length === 5) {
+    uniques.sort((a, b) => a - b);
+    if (isSequentialNumbers(uniques)) return 46 + opportunities * 10;
   }
   return 0;
 };
