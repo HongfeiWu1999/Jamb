@@ -1,4 +1,4 @@
-import { Die } from "../../../../../../types/types";
+import { AccionColumn, Die } from "../../../../../../types/types";
 
 export const getDiceValue = (
   dice: Die[],
@@ -80,4 +80,63 @@ const getKento = (numbers: number[], opportunities: number): number => {
     if (isSequentialNumbers(uniques)) return 46 + opportunities * 10;
   }
   return 0;
+};
+
+export const getUpdatedAccionColumns = (
+  accionColumns: AccionColumn[],
+  accion: string,
+  id: string,
+  dice: Die[],
+  opportunities: number
+) => {
+  return accionColumns.map((column) => {
+    if (column.accion === accion) {
+      const updatedColumn = {
+        ...column,
+        components: column.components.map((c) =>
+          c.id === id
+            ? {
+                ...c,
+                value: getDiceValue(dice, id, opportunities),
+                valid: false,
+              }
+            : c
+        ),
+        order: column.order.slice(1),
+      };
+
+      const normalSeccion = updatedColumn.components.slice(0, 6);
+      let normalSeccionScore = normalSeccion.reduce(
+        (acc, { value }) => acc + value,
+        0
+      );
+      if (normalSeccionScore >= 60) normalSeccionScore += 30;
+
+      const maxMinSeccion = updatedColumn.components.slice(6, 8);
+      const maxMinSeccionScore =
+        maxMinSeccion[0].value && maxMinSeccion[1].value
+          ? Math.max(
+              0,
+              (maxMinSeccion[0].value - maxMinSeccion[1].value) *
+                normalSeccion[0].value
+            )
+          : 0;
+
+      const specialSeccion = updatedColumn.components.slice(8, 12);
+      const specialSeccionScore = specialSeccion.reduce(
+        (acc, { value }) => acc + value,
+        0
+      );
+
+      const scores = [
+        normalSeccionScore,
+        maxMinSeccionScore,
+        specialSeccionScore,
+      ];
+      updatedColumn.scores = scores;
+
+      return updatedColumn;
+    }
+    return column;
+  });
 };

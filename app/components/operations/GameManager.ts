@@ -37,5 +37,6 @@ export const startNewGame = (): GameState => {
       order: getColumnOrderByAccion(accion),
     })),
     locked: null,
+    autoHide: false,
   };
 };

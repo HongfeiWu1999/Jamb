@@ -39,6 +39,7 @@ export interface GameState {
   opportunities: number;
   accionColumns: AccionColumn[];
   locked: LockComponent | null;
+  autoHide: boolean;
 }
 
 export interface HelperState {

@@ -91,7 +91,11 @@ const Table: React.FC<TableProps> = ({
       ]}
     >
       <View style={styles.tableContainer}>
-        <TableHeader hideTable={hideTable} />
+        <TableHeader
+          gameState={gameState}
+          setGameState={setGameState}
+          hideTable={hideTable}
+        />
         <TableBody
           gameState={gameState}
           setGameState={setGameState}

@@ -2,7 +2,10 @@ import React, { useCallback } from "react";
 import { StyleSheet, Pressable, Text, View } from "react-native";
 import colors from "../../../../../config/colors";
 import gameStyles from "../../../../../styles/gameStyles";
-import { getDiceValue } from "./operations/columnOperations";
+import {
+  getDiceValue,
+  getUpdatedAccionColumns,
+} from "./operations/columnOperations";
 import { AccionColumn, Component, GameState } from "../../../../../types/types";
 
 interface ColumnComponentProps {
@@ -20,7 +23,7 @@ const ColumnComponent: React.FC<ColumnComponentProps> = ({
   setGameState,
   helperHandler,
 }) => {
-  const { dice, locked, opportunities, accionColumns } = gameState;
+  const { dice, locked, opportunities, accionColumns, autoHide } = gameState;
   const { accion, order } = accionColumn;
   const { id, valid, value } = component;
 
@@ -66,64 +69,24 @@ const ColumnComponent: React.FC<ColumnComponentProps> = ({
         : { ...die, value: 0 }
     );
 
-    const updatedColumns = accionColumns.map((column) => {
-      if (column.accion === accion) {
-        const updatedColumn = {
-          ...column,
-          components: column.components.map((c) =>
-            c.id === id
-              ? {
-                  ...c,
-                  value: getDiceValue(dice, id, opportunities),
-                  valid: false,
-                }
-              : c
-          ),
-          order: column.order.slice(1),
-        };
+    const updatedColumns = getUpdatedAccionColumns(
+      accionColumns,
+      accion,
+      id,
+      dice,
+      opportunities
+    );
 
-        const normalSeccion = updatedColumn.components.slice(0, 6);
-        let normalSeccionScore = normalSeccion.reduce(
-          (acc, { value }) => acc + value,
-          0
-        );
-        if (normalSeccionScore >= 60) normalSeccionScore += 30;
-
-        const maxMinSeccion = updatedColumn.components.slice(6, 8);
-        const maxMinSeccionScore =
-          maxMinSeccion[0].value && maxMinSeccion[1].value
-            ? Math.max(
-                0,
-                (maxMinSeccion[0].value - maxMinSeccion[1].value) *
-                  normalSeccion[0].value
-              )
-            : 0;
-
-        const specialSeccion = updatedColumn.components.slice(8, 12);
-        const specialSeccionScore = specialSeccion.reduce(
-          (acc, { value }) => acc + value,
-          0
-        );
-
-        const scores = [
-          normalSeccionScore,
-          maxMinSeccionScore,
-          specialSeccionScore,
-        ];
-        updatedColumn.scores = scores;
-
-        return updatedColumn;
-      }
-      return column;
-    });
-
-    setGameState({
-      ...gameState,
-      tableVisibility: false,
-      opportunities: 3,
-      dice: updatedDice,
-      accionColumns: updatedColumns,
-      locked: null,
+    setGameState((prevState) => {
+      const newGameState = {
+        ...prevState,
+        opportunities: 3,
+        dice: updatedDice,
+        accionColumns: updatedColumns,
+        locked: null,
+      };
+      if (autoHide) newGameState.tableVisibility = false;
+      return newGameState;
     });
   };
 
