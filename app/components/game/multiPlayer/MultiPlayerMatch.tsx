@@ -14,7 +14,6 @@ import {
   MessageType,
 } from "../../../types/types";
 import ActionHelper from "../../helper/ActionHelper";
-import TableButton from "../table/TableButton";
 import Toast, {
   BaseToast,
   ErrorToast,
@@ -24,8 +23,7 @@ import PlayersStatus from "./PlayersStatus";
 import { BaseToastProps } from "react-native-toast-message/lib/src/types";
 import CongratsPanel from "../congratsPanel/CongratsPanel";
 import GoBackAlert from "./GoBackAlert";
-import ExitButton from "../ExitButton";
-import GameHelper from "../../helper/GameHelper";
+import GameButtonsView from "../GameButtonsView";
 
 interface MultiPlayerMatchProps {
   navigation: NativeStackNavigationProp<any, any>;
@@ -302,27 +300,20 @@ const MultiPlayerMatch: React.FC<MultiPlayerMatchProps> = ({
       <DiceComponent
         gameState={gameState}
         setGameState={setGameState}
-        isPlayerTurn={isUserTurn && !isGameFinished}
+        isPlayerTurn={true}
+      />
+      <GameButtonsView
+        gameHelperVisibility={isGameHelperVisible}
+        setGameHelperVisibility={setIsGameHelperVisible}
+        backToStartScreen={showExitAlert}
+        showTable={showTable}
       />
       <Table
         gameState={gameState}
         setGameState={setGameState}
         setHelperState={setHelperState}
       />
-      <ExitButton
-        isTablevisible={gameState.tableVisibility}
-        onPress={showExitAlert}
-      />
-      <TableButton
-        isTablevisible={gameState.tableVisibility}
-        showTable={showTable}
-      />
       <ActionHelper helperState={helperState} setHelperState={setHelperState} />
-      <GameHelper
-        isVisible={isGameHelperVisible}
-        isTablevisible={gameState.tableVisibility}
-        setIsVisible={setIsGameHelperVisible}
-      />
       <GoBackAlert
         groupId={groupId}
         userSlot={userSlot}
@@ -355,14 +346,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.cyan,
     alignItems: "center",
     justifyContent: "center",
-  },
-  tableButton: {
-    position: "absolute",
-    backgroundColor: colors.tableBackground,
-    borderRadius: 30,
-    padding: 10,
-    bottom: 75,
-    right: 30,
   },
   successColor: {
     borderLeftColor: "green",

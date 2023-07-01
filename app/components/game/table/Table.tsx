@@ -25,22 +25,22 @@ const Table: React.FC<TableProps> = ({
   const slideAnimation = useRef(new Animated.Value(-1)).current;
 
   const hideTable = useCallback(() => {
-    Animated.timing(slideAnimation, {
-      toValue: -1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start(() => {
-      setGameState((prevState) => ({
-        ...prevState,
-        tableVisibility: false,
-      }));
-    });
+    setGameState((prevState) => ({
+      ...prevState,
+      tableVisibility: false,
+    }));
   }, [setGameState]);
 
   useEffect(() => {
     if (gameState.tableVisibility) {
       Animated.timing(slideAnimation, {
         toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      Animated.timing(slideAnimation, {
+        toValue: -1,
         duration: 300,
         useNativeDriver: true,
       }).start();

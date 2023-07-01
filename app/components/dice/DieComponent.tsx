@@ -17,14 +17,14 @@ const DieComponent: React.FC<DieProps> = ({ die, setGameState }) => {
     setDieImage(numberToDieImage(die.value));
   }, [die.value, setDieImage]);
 
-  const setDieLock = useCallback(() => {
+  const setDieLock = () => {
     setGameState((prevState) => ({
       ...prevState,
       dice: prevState.dice.map((d) =>
         d.id === die.id ? { ...d, locked: !d.locked } : d
       ),
     }));
-  }, [setGameState]);
+  };
 
   return (
     <Pressable

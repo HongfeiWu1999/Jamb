@@ -119,6 +119,7 @@ const ColumnComponent: React.FC<ColumnComponentProps> = ({
 
     setGameState({
       ...gameState,
+      tableVisibility: false,
       opportunities: 3,
       dice: updatedDice,
       accionColumns: updatedColumns,

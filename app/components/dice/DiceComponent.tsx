@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
 
 import DieComponent from "./DieComponent";
@@ -25,7 +25,7 @@ const DiceComponent: React.FC<DiceProps> = ({
   const [isOnlyBlockColumnRemains, setIsOnlyBlockColumnRemains] =
     useState<boolean>(false);
 
-  const rerollDice = useCallback(() => {
+  const rerollDice = () => {
     setGameState((prevState) => ({
       ...prevState,
       opportunities: prevState.opportunities - 1,
@@ -33,7 +33,7 @@ const DiceComponent: React.FC<DiceProps> = ({
         die.locked ? die : { ...die, ...getRandomDie() }
       ),
     }));
-  }, [setGameState]);
+  };
 
   useEffect(() => {
     if (

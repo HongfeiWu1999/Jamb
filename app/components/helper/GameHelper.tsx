@@ -6,7 +6,6 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  Image,
 } from "react-native";
 import { IconButton } from "react-native-paper";
 import colors from "../../config/colors";
@@ -14,15 +13,10 @@ import { MaterialCommunityIcons, Entypo } from "@expo/vector-icons";
 
 interface GameHelperProps {
   isVisible: boolean;
-  isTablevisible: boolean;
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const GameHelper: React.FC<GameHelperProps> = ({
-  isVisible,
-  isTablevisible,
-  setIsVisible,
-}) => {
+const GameHelper: React.FC<GameHelperProps> = ({ isVisible, setIsVisible }) => {
   const openHelper = useCallback(() => {
     setIsVisible(true);
   }, [setIsVisible]);
@@ -33,7 +27,7 @@ const GameHelper: React.FC<GameHelperProps> = ({
   return (
     <>
       <IconButton
-        style={[styles.helpButton, isTablevisible && { display: "none" }]}
+        style={styles.helpButton}
         icon="help"
         mode="contained"
         iconColor="white"
@@ -170,13 +164,14 @@ const GameHelper: React.FC<GameHelperProps> = ({
                 one <Text style={styles.title2}>die with a value</Text> from 1
                 to 5 or from 2 to 6. After the first{" "}
                 <Text style={styles.title2}>roll</Text>, the player scores 66
-                points, after the second roll 56 points, and after the third{" "}
+                points, after the second <Text style={styles.title2}>roll</Text>{" "}
+                56 points, and after the third{" "}
                 <Text style={styles.title2}>roll</Text> 46 points.
               </Text>
               <Text style={[styles.title11, styles.marginTop]}>Full</Text>
               <Text style={styles.iconText}>F</Text>
               <Text style={[styles.body1, styles.marginDesc]}>
-                <Text style={styles.title2}>The goal</Text> is to get three
+                <Text style={styles.title2}>The goal</Text> is to get three{" "}
                 <Text style={styles.title2}>dice</Text> of the same value and
                 two <Text style={styles.title2}>dice</Text> of the same value.
                 The sum is increased by 30.
@@ -234,12 +229,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   helpButton: {
-    position: "absolute",
     backgroundColor: colors.popyRed,
     borderColor: colors.isabelline,
     borderWidth: 2.5,
-    bottom: "15%",
-    right: "8%",
   },
   closeButton: {
     alignSelf: "flex-end",

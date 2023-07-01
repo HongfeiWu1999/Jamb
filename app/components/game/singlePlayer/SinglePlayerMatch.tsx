@@ -7,10 +7,8 @@ import DiceComponent from "../../dice/DiceComponent";
 import Table from "../table/Table";
 import { GameState, HelperState } from "../../../types/types";
 import ActionHelper from "../../helper/ActionHelper";
-import TableButton from "../table/TableButton";
 import CongratsPanel from "../congratsPanel/CongratsPanel";
-import ExitButton from "../ExitButton";
-import GameHelper from "../../helper/GameHelper";
+import GameButtonsView from "../GameButtonsView";
 
 interface SinglePlayerMatchProps {
   navigation: NativeStackNavigationProp<any, any>;
@@ -89,24 +87,18 @@ const SinglePlayerMatch: React.FC<SinglePlayerMatchProps> = ({
         setGameState={setGameState}
         isPlayerTurn={true}
       />
+      <GameButtonsView
+        gameHelperVisibility={isGameHelperVisible}
+        setGameHelperVisibility={setIsGameHelperVisible}
+        backToStartScreen={backToStartScreen}
+        showTable={showTable}
+      />
       <Table
         gameState={gameState}
         setGameState={setGameState}
         setHelperState={setHelperState}
       />
-      <GameHelper
-        isVisible={isGameHelperVisible}
-        isTablevisible={gameState.tableVisibility}
-        setIsVisible={setIsGameHelperVisible}
-      />
-      <ExitButton
-        isTablevisible={gameState.tableVisibility}
-        onPress={backToStartScreen}
-      />
-      <TableButton
-        isTablevisible={gameState.tableVisibility}
-        showTable={showTable}
-      />
+
       <ActionHelper helperState={helperState} setHelperState={setHelperState} />
       <CongratsPanel
         gameSlot={gameSlot}
@@ -124,14 +116,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.cyan,
     alignItems: "center",
     justifyContent: "center",
-  },
-  tableButton: {
-    position: "absolute",
-    backgroundColor: colors.tableBackground,
-    borderRadius: 30,
-    padding: 10,
-    bottom: 75,
-    right: 30,
   },
 });
 
