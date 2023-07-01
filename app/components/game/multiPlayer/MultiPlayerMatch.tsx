@@ -148,9 +148,9 @@ const MultiPlayerMatch: React.FC<MultiPlayerMatchProps> = ({
         opponentConection: false,
       });
     } else {
-      const isUserTurn = matchStatus.turn === userSlot;
-      setIsUserTurn(isUserTurn);
-      if (isUserTurn) {
+      const currentTurn = matchStatus.turn === userSlot;
+      setIsUserTurn(currentTurn);
+      if (currentTurn) {
         enqueueMessage(
           "info",
           "It's Your Turn.",
@@ -300,7 +300,7 @@ const MultiPlayerMatch: React.FC<MultiPlayerMatchProps> = ({
       <DiceComponent
         gameState={gameState}
         setGameState={setGameState}
-        isPlayerTurn={true}
+        isPlayerTurn={isUserTurn && !isGameFinished}
       />
       <GameButtonsView
         gameHelperVisibility={isGameHelperVisible}
