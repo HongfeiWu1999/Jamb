@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 
 import colors from "../../../config/colors";
 import { GameGroup } from "../../../types/types";

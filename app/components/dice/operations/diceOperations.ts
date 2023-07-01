@@ -1,6 +1,6 @@
-export const getRandomDie = (): {} => {
+export const getRandomDie = () => {
   const number = Math.floor(Math.random() * 6) + 1;
-  return { value: number };
+  return number;
 };
 
 export const numberToDieImage = (number: number) => {
