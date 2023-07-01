@@ -35,9 +35,22 @@ export const getDiceValue = (
       return getKento(validNumbers, opportunities);
     case "09":
       const numWithThreeReps = getRepeatedNumber(validNumbers, 3);
-      if (!numWithThreeReps) return numWithThreeReps;
-      const newDice = validNumbers.filter((num) => num !== numWithThreeReps);
-      const numWithTwoReps = getRepeatedNumber(newDice, 2);
+
+      if (!numWithThreeReps) return 0;
+
+      const leftDice = validNumbers.filter((num) => num !== numWithThreeReps);
+      const anotherNumWithThreeReps = getRepeatedNumber(leftDice, 3);
+
+      if (anotherNumWithThreeReps) {
+        if (anotherNumWithThreeReps > numWithThreeReps) {
+          return anotherNumWithThreeReps * 3 + numWithThreeReps * 2 + 30;
+        } else {
+          return numWithThreeReps * 3 + anotherNumWithThreeReps * 2 + 30;
+        }
+      }
+
+      const numWithTwoReps = getRepeatedNumber(leftDice, 2);
+
       return numWithTwoReps
         ? numWithThreeReps * 3 + numWithTwoReps * 2 + 30
         : numWithTwoReps;
