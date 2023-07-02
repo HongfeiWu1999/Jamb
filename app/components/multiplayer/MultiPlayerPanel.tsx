@@ -1,5 +1,12 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { View, Modal, StyleSheet, TouchableOpacity, Text } from "react-native";
+import {
+  View,
+  Modal,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  AppState,
+} from "react-native";
 import colors from "../../config/colors";
 import SearchGroupPanel from "./SearchGroupPanel";
 import CreateGroupPanel from "./CreateGroupPanel";
@@ -52,6 +59,19 @@ const MultiPlayerPanel: React.FC<MultiPlayerPanelProps> = ({
       setSearchGroupPanelVisibility(false);
     });
     return unsubscribe;
+  });
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      if (nextAppState.match(/inactive|background/)) {
+        setCreateGroupPanelVisibility(false);
+        setSearchGroupPanelVisibility(false);
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
   });
 
   return (

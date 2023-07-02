@@ -34,7 +34,9 @@ const SearchGroupPanel: React.FC<SearchGroupPanelProps> = ({
 }) => {
   const [isEnteringGame, setIsEnteringGame] = useState<boolean>(false);
   const [groupIdList, setGroupIdList] = useState<string[]>([]);
-  const [groupList, setGroupList] = useState<GameGroup[]>([]);
+  const [groupList, setGroupList] = useState<GameGroup[] | undefined>(
+    undefined
+  );
 
   const showErrorToast = (message: string) => {
     Toast.show({
@@ -101,7 +103,11 @@ const SearchGroupPanel: React.FC<SearchGroupPanelProps> = ({
         setIsEnteringGame(false);
       }
     };
-    setTimeout(joinGroupInDB, 750);
+    setTimeout(() => {
+      joinGroupInDB().catch((error) =>
+        console.error("Error joining the match: ", error)
+      );
+    }, 750);
   }, []);
 
   return (
@@ -113,7 +119,7 @@ const SearchGroupPanel: React.FC<SearchGroupPanelProps> = ({
             <LoadingBar message="Entering the match" />
           </View>
         )) ||
-          (groupList.length && (
+          (groupList && (
             <FlatList
               data={groupList}
               renderItem={(itemData) => {
