@@ -2,7 +2,7 @@ import React from "react";
 import GameScreen from "./app/components/game/GameScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import StartScreen from "./app/components/StartScreen";
+import StartScreen from "./app/components/start/StartScreen";
 import ConectionWarningScreen from "./app/components/game/multiPlayer/ConectionWarningScreen";
 import { View, StatusBar, StyleSheet } from "react-native";
 import colors from "./app/config/colors";

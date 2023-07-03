@@ -1,50 +1,27 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { View, StyleSheet, BackHandler } from "react-native";
+import React, { useCallback, useEffect } from "react";
+import { BackHandler } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-import colors from "../../../config/colors";
-import DiceComponent from "../../dice/DiceComponent";
-import Table from "../table/Table";
-import { GameState, HelperState } from "../../../types/types";
-import ActionHelper from "../../helper/ActionHelper";
-import CongratsPanel from "../congratsPanel/CongratsPanel";
-import GameButtonsView from "../GameButtonsView";
+import { GameOperations } from "../../../types/types";
+import GameComponents from "../common/GameComponents";
 
 interface SinglePlayerMatchProps {
   navigation: NativeStackNavigationProp<any, any>;
   gameSlot: number;
-  game: GameState;
+  operations: GameOperations;
 }
 
 const SinglePlayerMatch: React.FC<SinglePlayerMatchProps> = ({
   navigation,
   gameSlot,
-  game,
+  operations,
 }) => {
-  const [isGameFinished, setIsGameFinished] = useState<boolean>(false);
-  const [isGameHelperVisible, setIsGameHelperVisible] =
-    useState<boolean>(false);
-  const [gameState, setGameState] = useState<GameState>(game);
-  const [helperState, setHelperState] = useState<HelperState>({
-    helperVisibility: false,
-    dice: [],
-    opportunities: 0,
-    componentId: "",
-  });
+  const { setIsGameFinished, gameState, hideTable } = operations;
 
   const currentScore = gameState.accionColumns.reduce(
     (acc, accionColumn) =>
       acc + accionColumn.scores.reduce((sum, score) => sum + score, 0),
     0
-  );
-
-  const showTable = useCallback(
-    () =>
-      setGameState((prevState) => ({
-        ...prevState,
-        tableVisibility: true,
-      })),
-    [setGameState]
   );
 
   const backToStartScreen = useCallback(() => {
@@ -57,7 +34,12 @@ const SinglePlayerMatch: React.FC<SinglePlayerMatchProps> = ({
 
   useEffect(() => {
     const handleBackPress = () => {
-      backToStartScreen();
+      if (gameState.tableVisibility) {
+        hideTable();
+      } else {
+        backToStartScreen();
+      }
+
       return true;
     };
     BackHandler.addEventListener("hardwareBackPress", handleBackPress);
@@ -65,7 +47,7 @@ const SinglePlayerMatch: React.FC<SinglePlayerMatchProps> = ({
     return () => {
       BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
     };
-  });
+  }, [gameState.tableVisibility]);
 
   useEffect(() => {
     if (
@@ -81,42 +63,15 @@ const SinglePlayerMatch: React.FC<SinglePlayerMatchProps> = ({
   }, gameState.accionColumns);
 
   return (
-    <View style={styles.container}>
-      <DiceComponent
-        gameState={gameState}
-        setGameState={setGameState}
-        isPlayerTurn={true}
-      />
-      <GameButtonsView
-        gameHelperVisibility={isGameHelperVisible}
-        setGameHelperVisibility={setIsGameHelperVisible}
-        backToStartScreen={backToStartScreen}
-        showTable={showTable}
-      />
-      <Table
-        gameState={gameState}
-        setGameState={setGameState}
-        setHelperState={setHelperState}
-      />
-
-      <ActionHelper helperState={helperState} setHelperState={setHelperState} />
-      <CongratsPanel
-        gameSlot={gameSlot}
-        finalScore={currentScore}
-        visible={isGameFinished}
-        navigation={navigation}
-      />
-    </View>
+    <GameComponents
+      navigation={navigation}
+      gameSlot={gameSlot}
+      operations={operations}
+      currentScore={currentScore}
+      isPlayerTurn={true}
+      backHandler={backToStartScreen}
+    />
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.cyan,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
 
 export default React.memo(SinglePlayerMatch);

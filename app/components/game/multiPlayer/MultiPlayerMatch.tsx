@@ -1,19 +1,10 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { View, StyleSheet, BackHandler, AppState } from "react-native";
+import { StyleSheet, BackHandler, AppState } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { onSnapshot, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../../database/firebase";
 
-import colors from "../../../config/colors";
-import DiceComponent from "../../dice/DiceComponent";
-import Table from "../table/Table";
-import {
-  GameGroup,
-  GameState,
-  HelperState,
-  MessageType,
-} from "../../../types/types";
-import ActionHelper from "../../helper/ActionHelper";
+import { GameGroup, GameOperations, MessageType } from "../../../types/types";
 import Toast, {
   BaseToast,
   ErrorToast,
@@ -21,15 +12,14 @@ import Toast, {
 } from "react-native-toast-message";
 import PlayersStatus from "./PlayersStatus";
 import { BaseToastProps } from "react-native-toast-message/lib/src/types";
-import CongratsPanel from "../congratsPanel/CongratsPanel";
 import GoBackAlert from "./GoBackAlert";
-import GameButtonsView from "../GameButtonsView";
+import GameComponents from "../common/GameComponents";
 
 interface MultiPlayerMatchProps {
   navigation: NativeStackNavigationProp<any, any>;
   userSlot: number;
   groupId: string;
-  game: GameState;
+  operations: GameOperations;
 }
 
 const toastConfig = {
@@ -65,25 +55,17 @@ const MultiPlayerMatch: React.FC<MultiPlayerMatchProps> = ({
   navigation,
   userSlot,
   groupId,
-  game,
+  operations,
 }) => {
   const opponentSlot = (userSlot + 1) % 2;
-  const [isGameFinished, setIsGameFinished] = useState<boolean>(false);
   const [isWinner, setIsWinner] = useState<boolean>(false);
-  const [isUserTurn, setIsUserTurn] = useState<boolean>(false);
+  const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(false);
   const [matchStatus, setMatchStatus] = useState<GameGroup>();
-  const [gameState, setGameState] = useState<GameState>(game);
-  const [helperState, setHelperState] = useState<HelperState>({
-    helperVisibility: false,
-    dice: [],
-    opportunities: 0,
-    componentId: "",
-  });
   const [messageQueue, setMessageQueue] = useState<MessageType[]>([]);
   const [isDisplaying, setIsDisplaying] = useState<boolean>(false);
   const [isAlertVisible, setIsAlertVisible] = useState<boolean>(false);
-  const [isGameHelperVisible, setIsGameHelperVisible] =
-    useState<boolean>(false);
+
+  const { setIsGameFinished, gameState, hideTable } = operations;
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -149,7 +131,7 @@ const MultiPlayerMatch: React.FC<MultiPlayerMatchProps> = ({
       });
     } else {
       const currentTurn = matchStatus.turn === userSlot;
-      setIsUserTurn(currentTurn);
+      setIsPlayerTurn(currentTurn);
       if (currentTurn) {
         enqueueMessage(
           "info",
@@ -189,31 +171,50 @@ const MultiPlayerMatch: React.FC<MultiPlayerMatchProps> = ({
     0
   );
 
-  useEffect(() => {
-    const updateUserScore = async () => {
-      if (matchStatus) {
-        const groupRef = doc(db, "tables", groupId);
-        await updateDoc(groupRef, {
-          users: matchStatus.users.map((user, index) =>
-            userSlot === index ? { ...user, score: currentScore } : user
-          ),
-          turn: opponentSlot,
-        });
-      }
-    };
-    updateUserScore().catch((error) =>
-      console.error("Error on update user's score:", error)
-    );
-  }, [gameState.accionColumns, setGameState]);
+  const updateUserScore = async () => {
+    if (matchStatus) {
+      const groupRef = doc(db, "tables", groupId);
+      await updateDoc(groupRef, {
+        users: matchStatus.users.map((user, index) =>
+          userSlot === index ? { ...user, score: currentScore } : user
+        ),
+        turn: opponentSlot,
+      });
+    }
+  };
 
-  const showTable = useCallback(
-    () =>
-      setGameState((prevState) => ({
-        ...prevState,
-        tableVisibility: true,
-      })),
-    [setGameState]
-  );
+  const announceFinished = async () => {
+    if (matchStatus) {
+      const groupRef = doc(db, "tables", groupId);
+      await updateDoc(groupRef, {
+        users: matchStatus.users.map((user, index) =>
+          userSlot === index
+            ? { ...user, score: currentScore, finished: true }
+            : user
+        ),
+        turn: opponentSlot,
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (
+      !gameState.accionColumns.reduce(
+        (acc, accionColumn) =>
+          acc +
+          accionColumn.components.filter((component) => component.valid).length,
+        0
+      )
+    ) {
+      announceFinished().catch((error) =>
+        console.error("Error on annouce the game is finished:", error)
+      );
+    } else {
+      updateUserScore().catch((error) =>
+        console.error("Error on update user's score:", error)
+      );
+    }
+  }, [gameState.accionColumns]);
 
   const showExitAlert = useCallback(() => {
     setIsAlertVisible(true);
@@ -221,16 +222,20 @@ const MultiPlayerMatch: React.FC<MultiPlayerMatchProps> = ({
 
   useEffect(() => {
     const handleBackPress = () => {
-      showExitAlert();
+      if (gameState.tableVisibility) {
+        hideTable();
+      } else {
+        showExitAlert();
+      }
+
       return true;
     };
-
     BackHandler.addEventListener("hardwareBackPress", handleBackPress);
 
     return () => {
       BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
     };
-  });
+  }, [gameState.tableVisibility]);
 
   const setUserInActive = useCallback(async () => {
     if (matchStatus) {
@@ -249,32 +254,6 @@ const MultiPlayerMatch: React.FC<MultiPlayerMatchProps> = ({
   }, [matchStatus]);
 
   useEffect(() => {
-    if (
-      !gameState.accionColumns.reduce(
-        (acc, accionColumn) =>
-          acc +
-          accionColumn.components.filter((component) => component.valid).length,
-        0
-      )
-    ) {
-      const announceFinished = async () => {
-        if (matchStatus) {
-          const groupRef = doc(db, "tables", groupId);
-          await updateDoc(groupRef, {
-            users: matchStatus.users.map((user, index) =>
-              userSlot === index ? { ...user, finished: true } : user
-            ),
-            turn: opponentSlot,
-          });
-        }
-      };
-      announceFinished().catch((error) =>
-        console.error("Error on annouce the game is finished:", error)
-      );
-    }
-  }, gameState.accionColumns);
-
-  useEffect(() => {
     const subscription = AppState.addEventListener("change", (nextAppState) => {
       if (nextAppState.match(/inactive|background/)) {
         setUserInActive().catch((error) =>
@@ -289,31 +268,27 @@ const MultiPlayerMatch: React.FC<MultiPlayerMatchProps> = ({
   });
 
   return (
-    <View style={styles.container}>
+    <>
       {matchStatus && (
         <PlayersStatus
           userSlot={userSlot}
           matchStatus={matchStatus}
-          isPlayerTurn={isUserTurn}
+          isPlayerTurn={isPlayerTurn}
         />
       )}
-      <DiceComponent
-        gameState={gameState}
-        setGameState={setGameState}
-        isPlayerTurn={isUserTurn && !isGameFinished}
+      <GameComponents
+        navigation={navigation}
+        operations={operations}
+        currentScore={currentScore}
+        isPlayerTurn={isPlayerTurn}
+        backHandler={showExitAlert}
+        finalStatus={{
+          groupId: groupId,
+          matchStatus: matchStatus,
+          isWinner: isWinner,
+          userSlot: userSlot,
+        }}
       />
-      <GameButtonsView
-        gameHelperVisibility={isGameHelperVisible}
-        setGameHelperVisibility={setIsGameHelperVisible}
-        backToStartScreen={showExitAlert}
-        showTable={showTable}
-      />
-      <Table
-        gameState={gameState}
-        setGameState={setGameState}
-        setHelperState={setHelperState}
-      />
-      <ActionHelper helperState={helperState} setHelperState={setHelperState} />
       <GoBackAlert
         groupId={groupId}
         userSlot={userSlot}
@@ -322,31 +297,13 @@ const MultiPlayerMatch: React.FC<MultiPlayerMatchProps> = ({
         setIsAlertVisible={setIsAlertVisible}
         navigation={navigation}
       />
-      <CongratsPanel
-        gameSlot={null}
-        finalScore={currentScore}
-        visible={isGameFinished}
-        finalStatus={{
-          groupId: groupId,
-          matchStatus: matchStatus,
-          isWinner: isWinner,
-          userSlot: userSlot,
-        }}
-        navigation={navigation}
-      />
 
       <Toast config={toastConfig} />
-    </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.cyan,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   successColor: {
     borderLeftColor: "green",
   },

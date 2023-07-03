@@ -42,6 +42,19 @@ export interface GameState {
   autoHide: boolean;
 }
 
+export interface GameOperations {
+  isGameFinished: boolean;
+  setIsGameFinished: React.Dispatch<React.SetStateAction<boolean>>;
+  isGameHelperVisible: boolean;
+  setIsGameHelperVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  gameState: GameState;
+  setGameState: React.Dispatch<React.SetStateAction<GameState>>;
+  helperState: HelperState;
+  setHelperState: React.Dispatch<React.SetStateAction<HelperState>>;
+  showTable: () => void;
+  hideTable: () => void;
+}
+
 export interface HelperState {
   helperVisibility: boolean;
   dice: Die[];

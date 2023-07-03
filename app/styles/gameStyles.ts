@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 const gameStyles = StyleSheet.create({
   colum: {
     flex: 1,
-    padding: 1,
+    padding: 1.5,
   },
   component: {
     flex: 1,
