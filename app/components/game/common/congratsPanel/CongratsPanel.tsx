@@ -30,7 +30,7 @@ const CongratsPanel: React.FC<CongratsPanelProps> = ({
   navigation,
 }) => {
   const backToStartScreen = useCallback(() => {
-    if (!gameSlot || !finalStatus) {
+    if (gameSlot || !finalStatus) {
       navigation.navigate({
         name: "StartScreen",
         params: { gameSlot: gameSlot, gameState: null },
