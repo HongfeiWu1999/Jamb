@@ -20,6 +20,7 @@ import { Avatar } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
 import LoadingBar from "./LoadingBar";
 import Toast from "react-native-toast-message";
+import { buttonStyles, commonStyles } from "../../../styles/GameStyles";
 
 interface SearchGroupPanelProps {
   userInfo: any;
@@ -115,7 +116,7 @@ const SearchGroupPanel: React.FC<SearchGroupPanelProps> = ({
       <Text style={styles.title}>Search Group</Text>
       <View style={styles.groupListView}>
         {(isEnteringGame && (
-          <View style={styles.marginTop}>
+          <View style={commonStyles.marginTop100}>
             <LoadingBar message="Entering the match" />
           </View>
         )) ||
@@ -164,14 +165,17 @@ const SearchGroupPanel: React.FC<SearchGroupPanelProps> = ({
               }
             />
           )) || (
-            <View style={styles.marginTop}>
+            <View style={commonStyles.marginTop100}>
               <LoadingBar message="Loading available matches" />
             </View>
           )}
       </View>
       {isEnteringGame || (
-        <TouchableOpacity onPress={closePanel} style={styles.backButton}>
-          <Text style={styles.backButtonText}>Back</Text>
+        <TouchableOpacity
+          onPress={closePanel}
+          style={[buttonStyles.exitButton, commonStyles.marginTop10]}
+        >
+          <Text style={commonStyles.baseText}>Back</Text>
         </TouchableOpacity>
       )}
     </>
@@ -238,24 +242,6 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
     fontWeight: "bold",
     color: colors.smokeGray,
-  },
-  backButton: {
-    alignSelf: "center",
-    backgroundColor: colors.popyRed,
-    paddingVertical: 10,
-    paddingHorizontal: 25,
-    borderRadius: 10,
-    borderColor: colors.isabelline,
-    borderWidth: 1,
-    marginTop: 10,
-  },
-  backButtonText: {
-    fontSize: 18,
-    fontWeight: "500",
-    color: "white",
-  },
-  marginTop: {
-    marginTop: 100,
   },
   iconMargin: {
     marginBottom: -1,

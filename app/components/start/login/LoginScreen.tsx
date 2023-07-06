@@ -5,6 +5,7 @@ import * as Google from "expo-auth-session/providers/google";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import GoogleImg from "../../../assets/google.svg";
 import colors from "../../../config/colors";
+import { gameStyles } from "../../../styles/GameStyles";
 
 interface LoginScreenProps {
   userInfo: any;
@@ -72,9 +73,9 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ userInfo, setUserInfo }) => {
 
   return (
     <Modal transparent={true} animationType="fade" visible={!userInfo}>
-      <View style={styles.modalContainer}>
-        <View style={styles.viewContainer}>
-          <Text style={styles.signInTitle}>Sign In</Text>
+      <View style={gameStyles.modalContainer}>
+        <View style={gameStyles.viewContainer2}>
+          <Text style={gameStyles.title}>Sign In</Text>
           <TouchableOpacity
             style={styles.loginButton}
             disabled={!request}
@@ -96,28 +97,6 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ userInfo, setUserInfo }) => {
 };
 
 const styles = StyleSheet.create({
-  modalContainer: {
-    flex: 1,
-    backgroundColor: "rgba( 0, 0, 0, 0.3 )",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  viewContainer: {
-    backgroundColor: colors.smokeWhite,
-    alignItems: "center",
-    borderRadius: 20,
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    marginHorizontal: 20,
-    elevation: 10,
-  },
-  signInTitle: {
-    color: colors.cyan,
-    fontSize: 40,
-    fontWeight: "bold",
-    alignSelf: "center",
-    marginBottom: 15,
-  },
   loginButton: {
     elevation: 3,
     backgroundColor: "white",

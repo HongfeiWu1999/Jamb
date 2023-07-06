@@ -1,10 +1,15 @@
-import React, { useCallback } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import React from "react";
+import { View, Text } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { HelperState } from "../../../../../../types/types";
 import ProbabilityCell from "../ProbabilityCell";
 import colors from "../../../../../../config/colors";
+import {
+  commonStyles,
+  helperStyles,
+} from "../../../../../../styles/GameStyles";
+import { opportunityTextColor } from "../../helperTypes/operations/HelperManager";
 
 interface KentaComponentProps {
   helperState: HelperState;
@@ -13,23 +18,12 @@ interface KentaComponentProps {
 const KentaComponent: React.FC<KentaComponentProps> = ({ helperState }) => {
   const { opportunities } = helperState;
 
-  const opportunityTextColor = useCallback((index: number) => {
-    switch (index) {
-      case 0:
-        return styles.oppOneText;
-      case 1:
-        return styles.oppTwoText;
-      default:
-        return styles.oppThreeText;
-    }
-  }, []);
-
   return (
     <View>
-      <View style={[styles.optionView, styles.marginView]}>
-        <Text style={styles.exampleText}>Examples:</Text>
+      <View style={[helperStyles.optionView, commonStyles.marginTop20]}>
+        <Text style={helperStyles.exampleText}>Examples:</Text>
         <View>
-          <View style={styles.optionView}>
+          <View style={helperStyles.optionView}>
             <MaterialCommunityIcons
               name="dice-1"
               size={23}
@@ -56,7 +50,7 @@ const KentaComponent: React.FC<KentaComponentProps> = ({ helperState }) => {
               color={colors.exampleDice}
             />
           </View>
-          <View style={styles.optionView}>
+          <View style={helperStyles.optionView}>
             <MaterialCommunityIcons
               name="dice-2"
               size={23}
@@ -85,15 +79,17 @@ const KentaComponent: React.FC<KentaComponentProps> = ({ helperState }) => {
           </View>
         </View>
       </View>
-      <View style={styles.opportunityView}>
-        <Text style={styles.oppotunityText}>Opportunity</Text>
+      <View style={helperStyles.opportunityView}>
+        <Text style={helperStyles.oppotunityText}>Opportunity</Text>
       </View>
-      <View style={styles.probabilityView}>
+      <View style={helperStyles.probabilityView}>
         {[1, 2].map((opportunity, index) => {
           const valid = opportunity <= opportunities;
           return (
-            <View key={opportunity} style={styles.columnView}>
-              <Text style={[styles.hintText, opportunityTextColor(index)]}>
+            <View key={opportunity} style={helperStyles.columnView}>
+              <Text
+                style={[helperStyles.hintText, opportunityTextColor(index)]}
+              >
                 {opportunity}
               </Text>
               <ProbabilityCell probability={valid ? 0 : 0} />
@@ -104,72 +100,5 @@ const KentaComponent: React.FC<KentaComponentProps> = ({ helperState }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  marginView: {
-    marginTop: 20,
-  },
-  optionView: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  exampleText: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: colors.gray,
-    marginRight: 15,
-  },
-  opportunityView: {
-    alignSelf: "center",
-  },
-  oppotunityText: {
-    marginTop: 20,
-    marginBottom: 5,
-    fontWeight: "bold",
-    fontSize: 22,
-    color: colors.popyRed,
-  },
-  diceCount: {
-    backgroundColor: colors.diceGray,
-    marginTop: 1,
-    height: 50,
-    width: 50,
-    borderRadius: 8,
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-    textAlignVertical: "center",
-  },
-  probabilityView: {
-    flexDirection: "row",
-    justifyContent: "center",
-  },
-  columnView: {
-    padding: 1,
-  },
-  hintText: {
-    marginBottom: 5,
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  countText: {
-    marginBottom: 5,
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-    color: colors.popyRed,
-  },
-  oppOneText: {
-    color: colors.green,
-  },
-  oppTwoText: {
-    color: colors.lightBrown,
-  },
-  oppThreeText: {
-    color: colors.darkRed,
-  },
-});
 
 export default React.memo(KentaComponent);

@@ -10,6 +10,11 @@ import {
 import { IconButton } from "react-native-paper";
 import colors from "../../../../config/colors";
 import { MaterialCommunityIcons, Entypo } from "@expo/vector-icons";
+import {
+  commonStyles,
+  gameStyles,
+  tableStyles,
+} from "../../../../styles/GameStyles";
 
 interface GameHelperProps {
   isVisible: boolean;
@@ -35,7 +40,7 @@ const GameHelper: React.FC<GameHelperProps> = ({ isVisible, setIsVisible }) => {
         onPress={openHelper}
       />
       <Modal transparent={true} animationType="fade" visible={isVisible}>
-        <View style={styles.modalContainer}>
+        <View style={gameStyles.modalContainer}>
           <View style={styles.viewContainer}>
             <View style={styles.headerView}>
               <Text style={styles.ruleText}>Rules of the Game</Text>
@@ -66,9 +71,11 @@ const GameHelper: React.FC<GameHelperProps> = ({ isVisible, setIsVisible }) => {
                 <Text style={styles.title2}>the dice</Text> by{" "}
                 <Text style={styles.title2}>clicking</Text> on them.
               </Text>
-              <Text style={[styles.title1, styles.marginTop]}>Columns</Text>
+              <Text style={[styles.title1, commonStyles.marginTop15]}>
+                Columns
+              </Text>
               <Entypo
-                style={styles.upDownIcon}
+                style={commonStyles.marginTop10}
                 name="chevron-down"
                 size={36}
                 color={colors.gray}
@@ -80,7 +87,7 @@ const GameHelper: React.FC<GameHelperProps> = ({ isVisible, setIsVisible }) => {
               <View style={styles.upDownView}>
                 <Entypo name="chevron-down" size={36} color={colors.gray} />
                 <Entypo
-                  style={styles.specialUpIcon}
+                  style={tableStyles.specialUpIcon}
                   name="chevron-up"
                   size={36}
                   color={colors.gray}
@@ -91,7 +98,7 @@ const GameHelper: React.FC<GameHelperProps> = ({ isVisible, setIsVisible }) => {
                 filled in arbitrarily.
               </Text>
               <Entypo
-                style={styles.upDownIcon}
+                style={commonStyles.marginTop10}
                 name="chevron-up"
                 size={36}
                 color={colors.gray}
@@ -101,20 +108,22 @@ const GameHelper: React.FC<GameHelperProps> = ({ isVisible, setIsVisible }) => {
                 from down, up.
               </Text>
               <Entypo
-                style={styles.lockIcon}
+                style={commonStyles.marginTop20}
                 name="lock"
                 size={24}
                 color={colors.gray}
               />
-              <Text style={[styles.body1, styles.marginDesc]}>
+              <Text style={[styles.body1, commonStyles.marginTop25]}>
                 <Text style={styles.title2}>The field</Text> can only be locked
                 after the first throw. After locking the fields,{" "}
                 <Text style={styles.title2}>the cubes</Text> can be rolled two
                 more times.
               </Text>
-              <Text style={[styles.title1, styles.marginTop]}>Types</Text>
+              <Text style={[styles.title1, commonStyles.marginTop15]}>
+                Types
+              </Text>
               <Text style={styles.iconText}>1-6</Text>
-              <Text style={[styles.body1, styles.marginDesc]}>
+              <Text style={[styles.body1, commonStyles.marginTop25]}>
                 The <Text style={styles.title2}>number of dice</Text> from 1 to
                 6 that the player receives after three{" "}
                 <Text style={styles.title2}>rolls</Text> is entered into the
@@ -124,23 +133,23 @@ const GameHelper: React.FC<GameHelperProps> = ({ isVisible, setIsVisible }) => {
                 </Text>{" "}
                 and the value of the type in which they are entered.
               </Text>
-              <Text style={[styles.body1, styles.marginDesc]}>
+              <Text style={[styles.body1, commonStyles.marginTop25]}>
                 First:{"\n"}1 x 3 = 3{"\n"}2 x 4 = 8{"\n"}3 x 2 = 6{"\n"}4 x 4 =
                 16{"\n"}5 x 2 = 10{"\n"}6 x 3 = 18
               </Text>
-              <Text style={[styles.body1, styles.marginDesc]}>
+              <Text style={[styles.body1, commonStyles.marginTop25]}>
                 All field values from 1 to 6 are added up, and if the sum is
                 equal to or greater than 60,{" "}
                 <Text style={styles.title2}>the player receives a bonus</Text>{" "}
                 of 30 <Text style={styles.title2}>points</Text>.
               </Text>
-              <Text style={[styles.body1, styles.marginDesc]}>
+              <Text style={[styles.body1, commonStyles.marginTop25]}>
                 <Text style={styles.title2}>Example</Text>:{"\n"}3 + 8 + 6 + 16
                 + 10 + 18 = 61 + <Text style={styles.title2}>bonus</Text> 30 =
                 91
               </Text>
               <Text style={styles.iconText}>MAX-MIN</Text>
-              <Text style={[styles.body1, styles.marginDesc]}>
+              <Text style={[styles.body1, commonStyles.marginTop25]}>
                 The goal is to get as many{" "}
                 <Text style={styles.title2}>dice</Text> as possible in the{" "}
                 <Text style={styles.title2}>MAX</Text> field and as small as
@@ -149,17 +158,19 @@ const GameHelper: React.FC<GameHelperProps> = ({ isVisible, setIsVisible }) => {
                 two fields is multiplied by the number of units of the first
                 type.
               </Text>
-              <Text style={[styles.body1, styles.marginDesc]}>
+              <Text style={[styles.body1, commonStyles.marginTop25]}>
                 <Text style={styles.title2}>Example</Text>:{"\n"}MAX: 4 + 5 + 6
                 + 3 + 6 = 24{"\n"}MIN: 1 + 1 + 1 + 3 + 2 = 8
               </Text>
-              <Text style={[styles.body1, styles.marginDesc]}>
+              <Text style={[styles.body1, commonStyles.marginTop25]}>
                 <Text style={styles.title2}>Result</Text>: (MAX - MIN) x F1 =
                 (24 - 8) x 3 = 16 x 3 = 48
               </Text>
-              <Text style={[styles.title11, styles.marginTop]}>Kenta</Text>
+              <Text style={[styles.title11, commonStyles.marginTop15]}>
+                Kenta
+              </Text>
               <Text style={styles.iconText}>K</Text>
-              <Text style={[styles.body1, styles.marginDesc]}>
+              <Text style={[styles.body1, commonStyles.marginTop25]}>
                 <Text style={styles.title2}>The goal</Text> is to get at least
                 one <Text style={styles.title2}>die with a value</Text> from 1
                 to 5 or from 2 to 6. After the first{" "}
@@ -168,37 +179,43 @@ const GameHelper: React.FC<GameHelperProps> = ({ isVisible, setIsVisible }) => {
                 56 points, and after the third{" "}
                 <Text style={styles.title2}>roll</Text> 46 points.
               </Text>
-              <Text style={[styles.title11, styles.marginTop]}>Full</Text>
+              <Text style={[styles.title11, commonStyles.marginTop15]}>
+                Full
+              </Text>
               <Text style={styles.iconText}>F</Text>
-              <Text style={[styles.body1, styles.marginDesc]}>
+              <Text style={[styles.body1, commonStyles.marginTop25]}>
                 <Text style={styles.title2}>The goal</Text> is to get three{" "}
                 <Text style={styles.title2}>dice</Text> of the same value and
                 two <Text style={styles.title2}>dice</Text> of the same value.
                 The sum is increased by 30.
               </Text>
-              <Text style={[styles.body1, styles.marginDesc]}>
+              <Text style={[styles.body1, commonStyles.marginTop25]}>
                 <Text style={styles.title2}>Example</Text>: 5 + 5 + 5 + 6 + 6 =
                 27 + <Text style={styles.title2}>bonus</Text> 30 = 57
               </Text>
-              <Text style={[styles.title11, styles.marginTop]}>Poker</Text>
+              <Text style={[styles.title11, commonStyles.marginTop15]}>
+                Poker
+              </Text>
               <Text style={styles.iconText}>P</Text>
-              <Text style={[styles.body1, styles.marginDesc]}>
+              <Text style={[styles.body1, commonStyles.marginTop25]}>
                 <Text style={styles.title2}>The goal</Text> is to get four{" "}
                 <Text style={styles.title2}>dice</Text> of the same value.{" "}
                 <Text style={styles.title2}>The sum</Text> is increased by 40.
               </Text>
-              <Text style={[styles.body1, styles.marginDesc]}>
+              <Text style={[styles.body1, commonStyles.marginTop25]}>
                 <Text style={styles.title2}>Example</Text>: 4 + 4 + 4 + 4 = 16 +{" "}
                 <Text style={styles.title2}>bonus</Text> 40 = 56
               </Text>
-              <Text style={[styles.title11, styles.marginTop]}>Yamb</Text>
+              <Text style={[styles.title11, commonStyles.marginTop15]}>
+                Yamb
+              </Text>
               <Text style={styles.iconText}>Y</Text>
-              <Text style={[styles.body1, styles.marginDesc]}>
+              <Text style={[styles.body1, commonStyles.marginTop25]}>
                 <Text style={styles.title2}>The goal</Text> is to get five{" "}
                 <Text style={styles.title2}>dice</Text> of the same value.{" "}
                 <Text style={styles.title2}>The sum</Text> is increased by 50.
               </Text>
-              <Text style={[styles.body1, styles.marginDesc]}>
+              <Text style={[styles.body1, commonStyles.marginTop25]}>
                 <Text style={styles.title2}>Example</Text>: 5 + 5 + 5 + 5 + 5 =
                 25 + <Text style={styles.title2}>bonus</Text> 50 = 75
               </Text>
@@ -211,12 +228,6 @@ const GameHelper: React.FC<GameHelperProps> = ({ isVisible, setIsVisible }) => {
 };
 
 const styles = StyleSheet.create({
-  modalContainer: {
-    flex: 1,
-    backgroundColor: "rgba( 0, 0, 0, 0.3 )",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   viewContainer: {
     width: "90%",
     height: "90%",
@@ -248,9 +259,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     paddingHorizontal: 5,
   },
-  marginTop: {
-    marginTop: 15,
-  },
   title1: {
     fontSize: 36,
     fontWeight: "bold",
@@ -272,22 +280,9 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     textAlign: "justify",
   },
-  upDownIcon: {
-    marginTop: 10,
-  },
-  lockIcon: {
-    marginTop: 20,
-  },
   upDownView: {
     marginTop: 10,
     flexDirection: "row",
-  },
-  specialUpIcon: {
-    marginLeft: -17,
-    marginTop: 1,
-  },
-  marginDesc: {
-    marginTop: 25,
   },
   iconText: {
     marginTop: 20,

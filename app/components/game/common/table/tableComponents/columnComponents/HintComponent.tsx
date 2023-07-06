@@ -1,8 +1,8 @@
 import React, { useMemo } from "react";
-import { Text, StyleSheet, Pressable } from "react-native";
+import { Text, Pressable } from "react-native";
 
 import colors from "../../../../../../config/colors";
-import gameStyles from "../../../../../../styles/gameStyles";
+import { commonStyles, tableStyles } from "../../../../../../styles/GameStyles";
 
 interface HintComponentProps {
   id: string;
@@ -41,19 +41,15 @@ const HintComponent: React.FC<HintComponentProps> = ({ id }) => {
   return (
     <Pressable
       style={({ pressed }) => [
-        gameStyles.component,
+        tableStyles.component,
         pressed && { backgroundColor: colors.componentPressed },
       ]}
     >
-      <Text style={[gameStyles.baseText, styles.textColor]}>{text}</Text>
+      <Text style={[commonStyles.baseText, commonStyles.grayTextColor]}>
+        {text}
+      </Text>
     </Pressable>
   );
 };
-
-const styles = StyleSheet.create({
-  textColor: {
-    color: colors.gray,
-  },
-});
 
 export default React.memo(HintComponent);

@@ -4,6 +4,7 @@ import { View, StyleSheet, Text } from "react-native";
 import colors from "../../../config/colors";
 import { GameGroup } from "../../../types/types";
 import { Avatar } from "react-native-paper";
+import { commonStyles } from "../../../styles/GameStyles";
 
 interface PlayersStatusProps {
   userSlot: number;
@@ -35,18 +36,23 @@ const PlayersStatus: React.FC<PlayersStatusProps> = ({
   return (
     <View style={styles.shadowView}>
       <View style={styles.container}>
-        <View style={styles.statusInfo}>
+        <View style={commonStyles.rowCenteredView}>
           <View style={styles.statusView}>
-            <View style={styles.userInfo}>
+            <View style={commonStyles.rowCenteredView}>
               <Avatar.Image
                 size={30}
                 source={{ uri: matchStatus.users[0].image }}
               />
-              <Text style={[styles.userName, !userSlot && styles.playerName]}>
+              <Text
+                style={[
+                  styles.userName,
+                  !userSlot && commonStyles.redTextColor,
+                ]}
+              >
                 {userSlot ? matchStatus.users[0].name : "You"}
               </Text>
             </View>
-            <Text style={styles.scoreText}>
+            <Text style={commonStyles.fontSize20Text}>
               Score:{" "}
               <Text style={styles.scoreValue}>
                 {matchStatus.users[0].score}
@@ -55,18 +61,21 @@ const PlayersStatus: React.FC<PlayersStatusProps> = ({
           </View>
           <Text style={styles.vsText}>VS</Text>
           <View style={styles.statusView}>
-            <View style={styles.userInfo}>
+            <View style={commonStyles.rowCenteredView}>
               <Avatar.Image
                 size={30}
                 source={{ uri: matchStatus.users[1].image }}
               />
               <Text
-                style={[styles.userName, userSlot > 0 && styles.playerName]}
+                style={[
+                  styles.userName,
+                  userSlot > 0 && commonStyles.redTextColor,
+                ]}
               >
                 {userSlot ? "You" : matchStatus.users[1].name}
               </Text>
             </View>
-            <Text style={styles.scoreText}>
+            <Text style={commonStyles.fontSize20Text}>
               Score:{" "}
               <Text style={styles.scoreValue}>
                 {matchStatus.users[1].score}
@@ -116,16 +125,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.smokeWhite,
     alignItems: "center",
   },
-  statusInfo: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
   statusView: {
     width: 115,
-    alignItems: "center",
-  },
-  userInfo: {
-    flexDirection: "row",
     alignItems: "center",
   },
   userName: {
@@ -134,9 +135,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: colors.tableBackground,
   },
-  playerName: {
-    color: colors.red,
-  },
   vsText: {
     marginHorizontal: 12,
     fontSize: 35,
@@ -144,7 +142,6 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
     color: colors.popyRed,
   },
-  scoreText: { fontSize: 20 },
   scoreValue: {
     fontSize: 22,
     color: colors.cyan,

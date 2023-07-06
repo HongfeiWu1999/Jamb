@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 
@@ -6,7 +6,12 @@ import colors from "../../../../../../config/colors";
 import { HelperState, PokerYambState } from "../../../../../../types/types";
 import ProbabilityCell from "../ProbabilityCell";
 import SelectDiceComponent from "../SelectDiceComponent";
-import { calculateProbability } from "../../operations/probabilityManager";
+import { calculateProbability } from "../../operations/ProbabilityManager";
+import {
+  commonStyles,
+  helperStyles,
+} from "../../../../../../styles/GameStyles";
+import { opportunityTextColor } from "../../helperTypes/operations/HelperManager";
 
 interface PokerYambComponentProps {
   helperState: HelperState;
@@ -20,17 +25,6 @@ const PokerYambComponent: React.FC<PokerYambComponentProps> = ({
     requiredNumber: 0,
     counts: 0,
   });
-
-  const opportunityTextColor = useCallback((index: number) => {
-    switch (index) {
-      case 0:
-        return styles.oppOneText;
-      case 1:
-        return styles.oppTwoText;
-      default:
-        return styles.oppThreeText;
-    }
-  }, []);
 
   useEffect(() => {
     const dieValue = probabilityState.requiredNumber;
@@ -46,9 +40,9 @@ const PokerYambComponent: React.FC<PokerYambComponentProps> = ({
 
   return (
     <View>
-      <View style={[styles.optionView, styles.marginView]}>
-        <Text style={styles.exampleText}>Examples:</Text>
-        <View style={styles.optionView}>
+      <View style={[helperStyles.optionView, commonStyles.marginTop20]}>
+        <Text style={helperStyles.exampleText}>Examples:</Text>
+        <View style={helperStyles.optionView}>
           <FontAwesome5 name="dice" size={20} color={colors.exampleDice} />
           <FontAwesome5 name="dice" size={20} color={colors.exampleDice} />
           <FontAwesome5 name="dice" size={20} color={colors.exampleDice} />
@@ -62,17 +56,19 @@ const PokerYambComponent: React.FC<PokerYambComponentProps> = ({
         requiredNumber={probabilityState.requiredNumber}
         setProbabilityState={setProbabilityState}
       />
-      <View style={styles.marginBottomView} />
-      <View style={styles.opportunityView}>
+      <View style={commonStyles.marginBottom10} />
+      <View style={helperStyles.opportunityView}>
         <Text style={styles.oppotunityText}>Opportunity</Text>
       </View>
-      <View style={styles.probabilityView}>
+      <View style={helperStyles.probabilityView}>
         {[1, 2].map((opportunity, index) => {
           const valid =
             opportunity <= opportunities && probabilityState.requiredNumber;
           return (
-            <View key={opportunity} style={styles.columnView}>
-              <Text style={[styles.hintText, opportunityTextColor(index)]}>
+            <View key={opportunity} style={helperStyles.columnView}>
+              <Text
+                style={[helperStyles.hintText, opportunityTextColor(index)]}
+              >
                 {opportunity}
               </Text>
               <ProbabilityCell
@@ -95,72 +91,11 @@ const PokerYambComponent: React.FC<PokerYambComponentProps> = ({
 };
 
 const styles = StyleSheet.create({
-  optionView: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  marginView: {
-    marginTop: 20,
-  },
-  hintText: {
-    marginBottom: 5,
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  exampleText: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: colors.gray,
-    marginRight: 15,
-  },
-  opportunityView: {
-    alignSelf: "center",
-  },
   oppotunityText: {
     fontWeight: "bold",
     fontSize: 22,
     marginBottom: 5,
     color: colors.popyRed,
-  },
-  diceCount: {
-    backgroundColor: colors.diceGray,
-    marginTop: 1,
-    height: 50,
-    width: 50,
-    borderRadius: 8,
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-    textAlignVertical: "center",
-  },
-  probabilityView: {
-    flexDirection: "row",
-    justifyContent: "center",
-  },
-  columnView: {
-    padding: 1,
-  },
-  countText: {
-    marginBottom: 5,
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-    color: colors.popyRed,
-  },
-  oppOneText: {
-    color: colors.green,
-  },
-  oppTwoText: {
-    color: colors.lightBrown,
-  },
-  oppThreeText: {
-    color: colors.darkRed,
-  },
-
-  marginBottomView: {
-    marginBottom: 10,
   },
 });
 

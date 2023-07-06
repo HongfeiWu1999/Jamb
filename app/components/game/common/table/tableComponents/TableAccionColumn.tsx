@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import gameStyles from "../../../../../styles/gameStyles";
+import { tableStyles } from "../../../../../styles/GameStyles";
 import OrderHintComponent from "./columnComponents/OrderHintComponent";
 import TextComponent from "./columnComponents/TextComponent";
 import ColumnComponent from "./columnComponents/ColumnComponent";
@@ -27,7 +27,7 @@ const TableAccionColumn: React.FC<AccionColumnProps> = ({
   const specialSeccion = accionColumn.components.slice(8, 12);
 
   return (
-    <View style={gameStyles.colum}>
+    <View style={tableStyles.colum}>
       <OrderHintComponent icon={icon} />
       {normalSeccion.map((component) => (
         <ColumnComponent

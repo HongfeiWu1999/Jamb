@@ -14,6 +14,7 @@ import PlayersStatus from "./PlayersStatus";
 import { BaseToastProps } from "react-native-toast-message/lib/src/types";
 import GoBackAlert from "./GoBackAlert";
 import GameComponents from "../common/GameComponents";
+import { commonStyles } from "../../../styles/GameStyles";
 
 interface MultiPlayerMatchProps {
   navigation: NativeStackNavigationProp<any, any>;
@@ -27,7 +28,7 @@ const toastConfig = {
     <BaseToast
       {...props}
       style={styles.successColor}
-      contentContainerStyle={styles.toastContainer}
+      contentContainerStyle={commonStyles.paddingHorizontal15}
       text1Style={styles.successToast1Text}
     />
   ),
@@ -35,7 +36,7 @@ const toastConfig = {
     <InfoToast
       {...props}
       style={styles.successColor}
-      contentContainerStyle={styles.toastContainer}
+      contentContainerStyle={commonStyles.paddingHorizontal15}
       text1Style={styles.infoToast1Text}
       text2Style={styles.toast2Text}
     />
@@ -44,7 +45,7 @@ const toastConfig = {
     <ErrorToast
       {...props}
       style={styles.errorColor}
-      contentContainerStyle={styles.toastContainer}
+      contentContainerStyle={commonStyles.paddingHorizontal15}
       text1Style={styles.infoToast1Text}
       text2Style={styles.toast2Text}
     />
@@ -309,9 +310,6 @@ const styles = StyleSheet.create({
   },
   errorColor: {
     borderLeftColor: "red",
-  },
-  toastContainer: {
-    paddingHorizontal: 15,
   },
   successToast1Text: {
     fontSize: 13,

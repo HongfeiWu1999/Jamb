@@ -6,6 +6,7 @@ import colors from "../../../../config/colors";
 import TableHintColumn from "./tableComponents/TableHintColumn";
 import TableAccionColumn from "./tableComponents/TableAccionColumn";
 import { GameState } from "../../../../types/types";
+import { tableStyles } from "../../../../styles/GameStyles";
 
 interface TableBodyProps {
   gameState: GameState;
@@ -27,7 +28,7 @@ const TableBody: React.FC<TableBodyProps> = ({
           <View style={styles.upDownView}>
             <Entypo name="chevron-down" size={36} color={colors.gray} />
             <Entypo
-              style={styles.specialUpIcon}
+              style={tableStyles.specialUpIcon}
               name="chevron-up"
               size={36}
               color={colors.gray}
@@ -66,10 +67,6 @@ const styles = StyleSheet.create({
   },
   upDownView: {
     flexDirection: "row",
-  },
-  specialUpIcon: {
-    marginLeft: -17,
-    marginTop: 1,
   },
 });
 export default TableBody;

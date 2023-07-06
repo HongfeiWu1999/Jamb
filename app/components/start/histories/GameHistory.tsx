@@ -7,6 +7,7 @@ import { startNewGame } from "../../game/operations/GameManager";
 import colors from "../../../config/colors";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { IconButton } from "react-native-paper";
+import { commonStyles } from "../../../styles/GameStyles";
 
 interface GameHistoryProps {
   navigation: NativeStackNavigationProp<any, any>;
@@ -65,7 +66,7 @@ const GameHistory: React.FC<GameHistoryProps> = ({
   return (
     <>
       {(gameHistory && (
-        <View style={styles.container}>
+        <View style={commonStyles.rowCenteredView}>
           {(isDelete && (
             <View style={styles.resumeButton}>
               <Text style={styles.deleteWarning}>Delete Slot?</Text>
@@ -138,10 +139,6 @@ const GameHistory: React.FC<GameHistoryProps> = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
   resumeButton: {
     width: 204.5,
     height: 68.5,

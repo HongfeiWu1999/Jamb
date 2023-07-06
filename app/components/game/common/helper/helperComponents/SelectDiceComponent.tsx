@@ -1,8 +1,9 @@
 import React, { useCallback } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, Text } from "react-native";
 
 import HelperComponent from "./HelperComponent";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { helperStyles } from "../../../../../styles/GameStyles";
 
 interface SelectDiceComponentProps {
   requiredNumber: number;
@@ -25,10 +26,10 @@ const SelectDiceComponent: React.FC<SelectDiceComponentProps> = ({
 
   return (
     <View>
-      <Text style={styles.helperMarginText}>
+      <Text style={helperStyles.helperMarginText}>
         Select the die that you want to obtain.
       </Text>
-      <View style={styles.optionView}>
+      <View style={helperStyles.optionView2}>
         <HelperComponent
           icon={
             <MaterialCommunityIcons name="dice-1" size={28} color="black" />
@@ -81,18 +82,5 @@ const SelectDiceComponent: React.FC<SelectDiceComponentProps> = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  helperMarginText: {
-    fontSize: 20,
-    textAlign: "center",
-    marginTop: 20,
-  },
-  optionView: {
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    marginTop: 20,
-  },
-});
 
 export default React.memo(SelectDiceComponent);

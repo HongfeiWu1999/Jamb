@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { StyleSheet, Pressable, Text, View } from "react-native";
 import colors from "../../../../../../config/colors";
-import gameStyles from "../../../../../../styles/gameStyles";
+import { commonStyles, tableStyles } from "../../../../../../styles/GameStyles";
 import {
   getDiceValue,
   getUpdatedAccionColumns,
@@ -97,13 +97,13 @@ const ColumnComponent: React.FC<ColumnComponentProps> = ({
   const openHelper = useCallback(() => helperHandler(id), [helperHandler]);
 
   return (
-    <View style={styles.container}>
+    <View style={commonStyles.flex1View}>
       <Pressable
         disabled={!isPressableValid}
         onPress={isLockComponent() ? setComponentLock : setColumValue}
         onLongPress={openHelper}
         style={[
-          gameStyles.component,
+          tableStyles.component,
           styles.border,
           isPressableValid && styles.validBackground,
         ]}
@@ -111,7 +111,7 @@ const ColumnComponent: React.FC<ColumnComponentProps> = ({
         {({ pressed }) => (
           <Text
             style={[
-              gameStyles.baseText,
+              commonStyles.baseText,
               !pressed && component.valid && styles.validTextColor,
             ]}
           >
@@ -124,9 +124,6 @@ const ColumnComponent: React.FC<ColumnComponentProps> = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   border: {
     borderWidth: 1,
     borderColor: colors.grayBorder,

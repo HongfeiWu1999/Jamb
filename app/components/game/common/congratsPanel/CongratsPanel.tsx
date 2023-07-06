@@ -13,6 +13,12 @@ import { db } from "../../../../../database/firebase";
 
 import colors from "../../../../config/colors";
 import { FinalStatus } from "../../../../types/types";
+import {
+  buttonStyles,
+  commonStyles,
+  gameStyles,
+  helperStyles,
+} from "../../../../styles/GameStyles";
 
 interface CongratsPanelProps {
   gameSlot: number | undefined;
@@ -79,9 +85,9 @@ const CongratsPanel: React.FC<CongratsPanelProps> = ({
 
   return (
     <Modal transparent={true} animationType="fade" visible={visible}>
-      <View style={styles.modalContainer}>
-        <View style={styles.viewContainer}>
-          <Text style={styles.helperTitle}>Congratulations!!!</Text>
+      <View style={gameStyles.modalContainer}>
+        <View style={gameStyles.viewContainer}>
+          <Text style={helperStyles.helperTitle}>Congratulations!!!</Text>
           <Text style={styles.hintBody}>
             You have finished the game with the score below:
           </Text>
@@ -91,7 +97,7 @@ const CongratsPanel: React.FC<CongratsPanelProps> = ({
               style={[
                 styles.winnerLosserTitle,
                 (finalStatus.isWinner && styles.winnerColor) ||
-                  styles.loserColor,
+                  commonStyles.grayTextColor,
               ]}
             >
               {(finalStatus.isWinner && "Victory is yours!") ||
@@ -99,11 +105,11 @@ const CongratsPanel: React.FC<CongratsPanelProps> = ({
             </Text>
           )}
           <TouchableOpacity
-            style={styles.exitButton}
+            style={[buttonStyles.exitButton, commonStyles.marginTop30]}
             onPress={backToStartScreen}
             activeOpacity={0.8}
           >
-            <Text style={styles.exitButtonText}>Back to Start</Text>
+            <Text style={commonStyles.baseText}>Back to Start</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -112,26 +118,6 @@ const CongratsPanel: React.FC<CongratsPanelProps> = ({
 };
 
 const styles = StyleSheet.create({
-  modalContainer: {
-    flex: 1,
-    backgroundColor: "rgba( 0, 0, 0, 0.3 )",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  viewContainer: {
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 30,
-    margin: 20,
-    elevation: 10,
-    alignItems: "center",
-  },
-  helperTitle: {
-    fontSize: 36,
-    alignSelf: "center",
-    fontWeight: "bold",
-    color: colors.cyan,
-  },
   winnerLosserTitle: {
     fontSize: 30,
     alignSelf: "center",
@@ -151,26 +137,8 @@ const styles = StyleSheet.create({
     color: colors.tableBackground,
     textAlign: "center",
   },
-  exitButton: {
-    alignSelf: "center",
-    backgroundColor: colors.popyRed,
-    paddingVertical: 10,
-    paddingHorizontal: 25,
-    borderRadius: 10,
-    borderColor: colors.isabelline,
-    borderWidth: 1,
-    marginTop: 30,
-  },
-  exitButtonText: {
-    fontSize: 18,
-    fontWeight: "500",
-    color: "white",
-  },
   winnerColor: {
     color: colors.winnerGreen,
-  },
-  loserColor: {
-    color: colors.gray,
   },
 });
 

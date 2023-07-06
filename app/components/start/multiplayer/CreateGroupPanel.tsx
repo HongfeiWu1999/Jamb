@@ -17,6 +17,11 @@ import { db } from "../../../../database/firebase";
 import colors from "../../../config/colors";
 import { HelperText, TextInput } from "react-native-paper";
 import LoadingBar from "./LoadingBar";
+import {
+  buttonStyles,
+  commonStyles,
+  gameStyles,
+} from "../../../styles/GameStyles";
 
 interface CreateGroupPanelProps {
   userInfo: any;
@@ -108,7 +113,7 @@ const CreateGroupPanel: React.FC<CreateGroupPanelProps> = ({
 
   return (
     <>
-      <Text style={styles.title}>Create Group</Text>
+      <Text style={gameStyles.title}>Create Group</Text>
       {(!groupId && (
         <>
           <TextInput
@@ -137,10 +142,10 @@ const CreateGroupPanel: React.FC<CreateGroupPanelProps> = ({
       <View style={styles.buttonView}>
         <TouchableOpacity
           onPress={closePanel}
-          style={styles.backButton}
+          style={[buttonStyles.exitButton, commonStyles.marginTop10]}
           activeOpacity={0.8}
         >
-          <Text style={styles.buttonText}>Back</Text>
+          <Text style={commonStyles.baseText}>Back</Text>
         </TouchableOpacity>
         {!groupId && (
           <TouchableOpacity
@@ -148,7 +153,7 @@ const CreateGroupPanel: React.FC<CreateGroupPanelProps> = ({
             style={styles.createButton}
             activeOpacity={0.8}
           >
-            <Text style={styles.buttonText}>Create</Text>
+            <Text style={commonStyles.baseText}>Create</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -157,13 +162,6 @@ const CreateGroupPanel: React.FC<CreateGroupPanelProps> = ({
 };
 
 const styles = StyleSheet.create({
-  title: {
-    color: colors.cyan,
-    fontSize: 40,
-    fontWeight: "bold",
-    alignSelf: "center",
-    marginBottom: 15,
-  },
   userInput: {
     width: 235,
   },
@@ -176,16 +174,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
   },
-  backButton: {
-    alignSelf: "center",
-    backgroundColor: colors.popyRed,
-    paddingVertical: 10,
-    paddingHorizontal: 25,
-    borderRadius: 10,
-    borderColor: colors.isabelline,
-    borderWidth: 1,
-    marginTop: 10,
-  },
   createButton: {
     alignSelf: "center",
     backgroundColor: colors.cyan,
@@ -195,17 +183,6 @@ const styles = StyleSheet.create({
     borderColor: colors.isabelline,
     borderWidth: 1,
     marginTop: 10,
-  },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: "500",
-    color: "white",
-  },
-  hintText: {
-    color: colors.tableBackground,
-    fontWeight: "500",
-    marginTop: 20,
-    marginBottom: 10,
   },
 });
 

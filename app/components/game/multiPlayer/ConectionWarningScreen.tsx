@@ -1,18 +1,16 @@
 import React, { useCallback, useEffect, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  BackHandler,
-} from "react-native";
+import { View, Text, TouchableOpacity, BackHandler } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "../../../../database/firebase";
 
-import colors from "../../../config/colors";
 import { Route } from "@react-navigation/native";
 import { Conection } from "../../../types/types";
+import {
+  buttonStyles,
+  commonStyles,
+  gameStyles,
+} from "../../../styles/GameStyles";
 
 interface ConectionWarningScreenProps {
   navigation: NativeStackNavigationProp<any, any>;
@@ -74,13 +72,13 @@ const ConectionWarningScreen: React.FC<ConectionWarningScreenProps> = ({
   });
 
   return (
-    <View style={styles.container}>
-      <View style={styles.viewContainer}>
-        <Text style={styles.warningTitle}>
+    <View style={gameStyles.mainBackGround}>
+      <View style={gameStyles.viewContainer}>
+        <Text style={gameStyles.warningTitle}>
           {!conectionState.myConection && "You have lost the conection!"}
           {!conectionState.opponentConection && "Congratulations!!!"}
         </Text>
-        <Text style={styles.warningBody}>
+        <Text style={gameStyles.warningBody}>
           {!conectionState.myConection &&
             "This will result in a loss for you, and your opponent will be declared the winner."}
           {!conectionState.opponentConection &&
@@ -88,60 +86,15 @@ const ConectionWarningScreen: React.FC<ConectionWarningScreenProps> = ({
         </Text>
 
         <TouchableOpacity
-          style={styles.exitButton}
+          style={[buttonStyles.exitButton, commonStyles.marginTop30]}
           onPress={backToStartScreen}
           activeOpacity={0.8}
         >
-          <Text style={styles.exitButtonText}>Back to Start</Text>
+          <Text style={commonStyles.baseText}>Back to Start</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.cyan,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  viewContainer: {
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 30,
-    margin: 20,
-    elevation: 10,
-    alignItems: "center",
-  },
-  warningTitle: {
-    fontSize: 30,
-    textAlign: "center",
-    fontWeight: "bold",
-    color: colors.coral,
-  },
-  warningBody: {
-    marginTop: 20,
-    fontSize: 15,
-    textAlign: "justify",
-    fontWeight: "bold",
-    color: colors.tableBackground,
-  },
-  exitButton: {
-    alignSelf: "center",
-    backgroundColor: colors.popyRed,
-    paddingVertical: 10,
-    paddingHorizontal: 25,
-    borderRadius: 10,
-    borderColor: colors.isabelline,
-    borderWidth: 1,
-    marginTop: 30,
-  },
-  exitButtonText: {
-    fontSize: 18,
-    fontWeight: "500",
-    color: "white",
-  },
-});
 
 export default React.memo(ConectionWarningScreen);

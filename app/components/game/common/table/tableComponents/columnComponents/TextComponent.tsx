@@ -1,8 +1,7 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 
-import colors from "../../../../../../config/colors";
-import gameStyles from "../../../../../../styles/gameStyles";
+import { commonStyles, tableStyles } from "../../../../../../styles/GameStyles";
 
 interface TextComponentProps {
   number: number;
@@ -10,18 +9,12 @@ interface TextComponentProps {
 
 const TextComponent: React.FC<TextComponentProps> = ({ number }) => {
   return (
-    <View style={gameStyles.component}>
-      <Text style={[gameStyles.baseText, styles.textColor]}>
+    <View style={tableStyles.component}>
+      <Text style={[commonStyles.baseText, commonStyles.popyredTextColor]}>
         {number ? number : ""}
       </Text>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  textColor: {
-    color: colors.popyRed,
-  },
-});
 
 export default TextComponent;

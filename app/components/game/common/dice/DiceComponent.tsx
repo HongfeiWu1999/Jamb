@@ -6,6 +6,7 @@ import { getRandomDie } from "./operations/diceOperations";
 import colors from "../../../../config/colors";
 
 import { GameState } from "../../../../types/types";
+import { commonStyles } from "../../../../styles/GameStyles";
 
 const opportunityImage = require("../../../../assets/icon_o.png");
 const noOpportunityImage = require("../../../../assets/icon_x.png");
@@ -57,7 +58,7 @@ const DiceComponent: React.FC<DiceProps> = ({
     (isOnlyBlockColumnRemains ? opportunities === 3 : opportunities);
 
   return (
-    <View style={styles.container}>
+    <View style={commonStyles.centeredView}>
       <View style={[styles.board, opportunities === 3 && { display: "none" }]}>
         {dice.map((die) => (
           <DieComponent key={die.id} die={die} setGameState={setGameState} />
@@ -84,9 +85,6 @@ const DiceComponent: React.FC<DiceProps> = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-  },
   board: {
     flexDirection: "row",
     flexWrap: "wrap",

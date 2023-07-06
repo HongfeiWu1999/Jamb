@@ -9,6 +9,11 @@ import {
 import ProbabilityCell from "../ProbabilityCell";
 import HelperComponent from "../HelperComponent";
 import colors from "../../../../../../config/colors";
+import {
+  commonStyles,
+  helperStyles,
+} from "../../../../../../styles/GameStyles";
+import { opportunityTextColor } from "../../helperTypes/operations/HelperManager";
 
 interface KentaComponentProps {
   helperState: HelperState;
@@ -36,23 +41,12 @@ const KentaComponent: React.FC<KentaComponentProps> = ({ helperState }) => {
     }));
   }, []);
 
-  const opportunityTextColor = useCallback((index: number) => {
-    switch (index) {
-      case 0:
-        return styles.oppOneText;
-      case 1:
-        return styles.oppTwoText;
-      default:
-        return styles.oppThreeText;
-    }
-  }, []);
-
   return (
     <View>
-      <View style={[styles.optionView, styles.marginView]}>
-        <Text style={styles.exampleText}>Examples:</Text>
+      <View style={[helperStyles.optionView, commonStyles.marginTop20]}>
+        <Text style={helperStyles.exampleText}>Examples:</Text>
         <View>
-          <View style={styles.optionView}>
+          <View style={helperStyles.optionView}>
             <FontAwesome5 name="dice" size={20} color={colors.kaki} />
             <FontAwesome5 name="dice" size={20} color={colors.kaki} />
             <FontAwesome5 name="dice" size={20} color={colors.kaki} />
@@ -62,16 +56,16 @@ const KentaComponent: React.FC<KentaComponentProps> = ({ helperState }) => {
         </View>
       </View>
       <View>
-        <Text style={styles.helperMarginText}>
+        <Text style={helperStyles.helperMarginText}>
           Select the die that you want to obtain for{" "}
-          <View style={styles.optionView}>
+          <View style={helperStyles.optionView}>
             <FontAwesome5 name="dice" size={20} color={colors.kaki} />
             <FontAwesome5 name="dice" size={20} color={colors.kaki} />
             <FontAwesome5 name="dice" size={20} color={colors.kaki} />
           </View>{" "}
           dice.
         </Text>
-        <View style={styles.optionView2}>
+        <View style={helperStyles.optionView2}>
           <HelperComponent
             icon={
               <MaterialCommunityIcons name="dice-1" size={28} color="black" />
@@ -122,16 +116,16 @@ const KentaComponent: React.FC<KentaComponentProps> = ({ helperState }) => {
           />
         </View>
       </View>
-      <View style={styles.marginBottomView}>
-        <Text style={styles.helperMarginText}>
+      <View style={commonStyles.marginBottom10}>
+        <Text style={helperStyles.helperMarginText}>
           Select the die that you want to obtain for{" "}
-          <View style={styles.optionView}>
+          <View style={helperStyles.optionView}>
             <FontAwesome5 name="dice" size={20} color={colors.exampleDice} />
             <FontAwesome5 name="dice" size={20} color={colors.exampleDice} />
           </View>{" "}
           dice.
         </Text>
-        <View style={styles.optionView2}>
+        <View style={helperStyles.optionView2}>
           <HelperComponent
             icon={
               <MaterialCommunityIcons name="dice-1" size={28} color="black" />
@@ -182,13 +176,13 @@ const KentaComponent: React.FC<KentaComponentProps> = ({ helperState }) => {
           />
         </View>
       </View>
-      <View style={styles.opportunityView}>
+      <View style={helperStyles.opportunityView2}>
         <Text style={styles.oppotunityText}>Opportunity</Text>
       </View>
-      <View style={styles.probabilityView}>
-        <View style={styles.columnView}>
-          <Text style={styles.countText}>Count</Text>
-          <Text style={styles.diceCount}>1</Text>
+      <View style={helperStyles.probabilityView}>
+        <View style={helperStyles.columnView}>
+          <Text style={helperStyles.countText}>Count</Text>
+          <Text style={helperStyles.diceCountView}>1</Text>
         </View>
         {[1, 2].map((opportunity, index) => {
           const valid =
@@ -196,7 +190,7 @@ const KentaComponent: React.FC<KentaComponentProps> = ({ helperState }) => {
             probabilityState.requiredNumber1 &&
             probabilityState.requiredNumber2;
           return (
-            <View key={opportunity} style={styles.columnView}>
+            <View key={opportunity} style={helperStyles.columnView}>
               <Text style={[styles.hintText, opportunityTextColor(index)]}>
                 {opportunity}
               </Text>
@@ -210,30 +204,6 @@ const KentaComponent: React.FC<KentaComponentProps> = ({ helperState }) => {
 };
 
 const styles = StyleSheet.create({
-  marginView: {
-    marginTop: 20,
-  },
-  optionView: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  optionView2: {
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    marginTop: 20,
-  },
-  exampleText: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: colors.gray,
-    marginRight: 15,
-  },
-  helperMarginText: {
-    fontSize: 20,
-    textAlign: "center",
-    marginTop: 20,
-  },
   helperText: {
     fontSize: 20,
     textAlign: "center",
@@ -262,9 +232,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginVertical: 10,
   },
-  opportunityView: {
-    flexDirection: "row-reverse",
-  },
   oppotunityText: {
     marginTop: 20,
     marginBottom: 5,
@@ -272,43 +239,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 22,
     color: colors.popyRed,
-  },
-  diceCount: {
-    backgroundColor: colors.diceGray,
-    marginTop: 1,
-    height: 50,
-    width: 50,
-    borderRadius: 8,
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-    textAlignVertical: "center",
-  },
-  probabilityView: {
-    flexDirection: "row",
-    justifyContent: "center",
-  },
-  columnView: {
-    padding: 1,
-  },
-  countText: {
-    marginBottom: 5,
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-    color: colors.popyRed,
-  },
-  oppOneText: {
-    color: colors.green,
-  },
-  oppTwoText: {
-    color: colors.lightBrown,
-  },
-  oppThreeText: {
-    color: colors.darkRed,
-  },
-  marginBottomView: {
-    marginBottom: 10,
   },
 });
 

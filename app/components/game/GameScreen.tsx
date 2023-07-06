@@ -7,6 +7,7 @@ import MultiPlayerMatch from "./multiPlayer/MultiPlayerMatch";
 import { GameState, HelperState } from "../../types/types";
 import { View, StyleSheet } from "react-native";
 import colors from "../../config/colors";
+import { gameStyles } from "../../styles/GameStyles";
 
 interface GameScreenProps {
   navigation: NativeStackNavigationProp<any, any>;
@@ -59,7 +60,7 @@ const GameScreen: React.FC<GameScreenProps> = ({ navigation, route }) => {
   };
 
   return (
-    <View style={styles.mainBackGround}>
+    <View style={gameStyles.mainBackGround}>
       {(route.params?.gameSlot !== undefined && (
         <SinglePlayerMatch
           navigation={navigation}
@@ -77,14 +78,5 @@ const GameScreen: React.FC<GameScreenProps> = ({ navigation, route }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  mainBackGround: {
-    flex: 1,
-    backgroundColor: colors.cyan,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
 
 export default React.memo(GameScreen);

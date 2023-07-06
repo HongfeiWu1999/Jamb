@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { View, StyleSheet, AppState } from "react-native";
+import { View, AppState } from "react-native";
 import { Button } from "react-native-paper";
 import { Route } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -13,6 +13,11 @@ import { GameState, UserState } from "../../types/types";
 import GameHistories from "./histories/GameHistories";
 import MultiPlayerPanel from "./multiplayer/MultiPlayerPanel";
 import StartTitle from "./StartTitle";
+import {
+  buttonStyles,
+  commonStyles,
+  gameStyles,
+} from "../../styles/GameStyles";
 
 interface StartScreenProps {
   navigation: NativeStackNavigationProp<any, any>;
@@ -133,32 +138,32 @@ const StartScreen: React.FC<StartScreenProps> = ({ navigation, route }) => {
   });
 
   return (
-    <View style={styles.container}>
+    <View style={gameStyles.mainBackGround}>
       <StartTitle />
-      <View style={styles.buttonView}>
+      <View style={commonStyles.flex1View}>
         <Button
           onPress={openGameHistory}
           mode="contained"
-          labelStyle={styles.buttonText}
+          labelStyle={buttonStyles.buttonText}
           buttonColor="red"
           textColor="white"
         >
           Start Game
         </Button>
         <Button
-          style={styles.marginTop}
+          style={commonStyles.marginTop10}
           onPress={openMultiplayerPanel}
           mode="contained"
-          labelStyle={styles.buttonText}
+          labelStyle={buttonStyles.buttonText}
           buttonColor={colors.brownGray}
           textColor="white"
         >
           Multiplayer
         </Button>
         <Button
-          style={[styles.marginTop, !userInfo && { display: "none" }]}
+          style={[commonStyles.marginTop10, !userInfo && { display: "none" }]}
           onPress={closeUserSession}
-          labelStyle={styles.buttonText}
+          labelStyle={buttonStyles.buttonText}
           icon="logout"
           mode="contained"
           buttonColor="white"
@@ -184,23 +189,5 @@ const StartScreen: React.FC<StartScreenProps> = ({ navigation, route }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.cyan,
-    alignItems: "center",
-  },
-  marginTop: {
-    marginTop: 10,
-  },
-  buttonText: {
-    fontSize: 30,
-    paddingTop: 15,
-  },
-  buttonView: {
-    flex: 1,
-  },
-});
 
 export default React.memo(StartScreen);

@@ -4,6 +4,7 @@ import { IconButton } from "react-native-paper";
 
 import colors from "../../../../config/colors";
 import GameHelper from "../helper/GameHelper";
+import { commonStyles } from "../../../../styles/GameStyles";
 
 interface GameButtonsViewProps {
   gameHelperVisibility: boolean;
@@ -28,7 +29,7 @@ const GameButtonsView: React.FC<GameButtonsViewProps> = ({
         size={40}
         onPress={backHandler}
       />
-      <View style={styles.centeredContainer}>
+      <View style={commonStyles.centeredView}>
         <GameHelper
           isVisible={gameHelperVisibility}
           setIsVisible={setGameHelperVisibility}
@@ -54,9 +55,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: "5%",
     bottom: "3%",
     position: "absolute",
-  },
-  centeredContainer: {
-    alignItems: "center",
   },
   tableButton: {
     backgroundColor: colors.tableBackground,

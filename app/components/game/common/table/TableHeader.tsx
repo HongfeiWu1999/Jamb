@@ -5,6 +5,7 @@ import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import colors from "../../../../config/colors";
 import { Switch } from "react-native-paper";
 import { GameState } from "../../../../types/types";
+import { commonStyles } from "../../../../styles/GameStyles";
 
 interface TableHeaderProps {
   gameState: GameState;
@@ -32,8 +33,9 @@ const TableHeader: React.FC<TableHeaderProps> = ({
         <Text style={styles.baseText}>Jamb</Text>
         <View style={styles.autoHideView}>
           <Text style={styles.hintText}>
-            AutoHide <Text style={autoHide && styles.onOffTextStyle}>On</Text>/
-            <Text style={!autoHide && styles.onOffTextStyle}>Off</Text>
+            AutoHide{" "}
+            <Text style={autoHide && commonStyles.popyredTextColor}>On</Text>/
+            <Text style={!autoHide && commonStyles.popyredTextColor}>Off</Text>
           </Text>
           <Switch
             color={colors.cyan}
@@ -47,7 +49,12 @@ const TableHeader: React.FC<TableHeaderProps> = ({
         onPress={hideTable}
         activeOpacity={0.8}
       >
-        <FontAwesome style={styles.icon} name="close" size={30} color="white" />
+        <FontAwesome
+          style={commonStyles.marginRight10}
+          name="close"
+          size={30}
+          color="white"
+        />
       </TouchableOpacity>
     </View>
   );
@@ -79,9 +86,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 50,
     borderBottomLeftRadius: 20,
   },
-  icon: {
-    marginRight: 10,
-  },
   autoHideView: {
     flex: 1,
     flexDirection: "row",
@@ -92,9 +96,6 @@ const styles = StyleSheet.create({
     color: colors.gray,
     fontSize: 16,
     fontWeight: "bold",
-  },
-  onOffTextStyle: {
-    color: colors.popyRed,
   },
 });
 
