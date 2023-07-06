@@ -116,7 +116,7 @@ const GameHelper: React.FC<GameHelperProps> = ({ isVisible, setIsVisible }) => {
               <Text style={[styles.body1, commonStyles.marginTop25]}>
                 <Text style={styles.title2}>The field</Text> can only be locked
                 after the first throw. After locking the fields,{" "}
-                <Text style={styles.title2}>the cubes</Text> can be rolled two
+                <Text style={styles.title2}>the dices</Text> can be rolled two
                 more times.
               </Text>
               <Text style={[styles.title1, commonStyles.marginTop15]}>
@@ -129,7 +129,7 @@ const GameHelper: React.FC<GameHelperProps> = ({ isVisible, setIsVisible }) => {
                 <Text style={styles.title2}>rolls</Text> is entered into the
                 fields. The value is multiplied by{" "}
                 <Text style={styles.title2}>
-                  multiplying the number of cubes
+                  multiplying the number of dices
                 </Text>{" "}
                 and the value of the type in which they are entered.
               </Text>

@@ -22,7 +22,7 @@ const DiceComponent: React.FC<DiceProps> = ({
   setGameState,
   isPlayerTurn,
 }) => {
-  const { dice, opportunities, accionColumns } = gameState;
+  const { dice, opportunities, accionColumns, locked } = gameState;
   const [isOnlyBlockColumnRemains, setIsOnlyBlockColumnRemains] =
     useState<boolean>(false);
 
@@ -55,7 +55,9 @@ const DiceComponent: React.FC<DiceProps> = ({
 
   const isValid =
     isPlayerTurn &&
-    (isOnlyBlockColumnRemains ? opportunities === 3 : opportunities);
+    (isOnlyBlockColumnRemains
+      ? opportunities === 3 || (locked && opportunities)
+      : opportunities);
 
   return (
     <View style={commonStyles.centeredView}>
