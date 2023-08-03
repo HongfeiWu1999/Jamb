@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { View, Modal, StyleSheet, Text, TouchableOpacity } from "react-native";
 
 import colors from "../../../config/colors";
@@ -34,6 +34,13 @@ const GameHistories: React.FC<GameHistoriesProps> = ({
       isHistoryPanelVisible: false,
     }));
   }, [setPanelVisibility]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("blur", () => {
+      closeHistoryPanel();
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <Modal transparent={true} animationType="fade" visible={panelVisibility}>

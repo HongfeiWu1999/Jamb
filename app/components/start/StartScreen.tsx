@@ -25,12 +25,6 @@ interface StartScreenProps {
   route: Route<any, any>;
 }
 
-const getUserHistories = async () => {
-  const data = await AsyncStorage.getItem("@Game_Histories");
-  if (!data) return [null, null, null];
-  return JSON.parse(data);
-};
-
 const initPanelVisbilityState = () => ({
   isLoginPanelVisible: false,
   isHistoryPanelVisible: false,
@@ -45,24 +39,25 @@ const StartScreen: React.FC<StartScreenProps> = ({ navigation, route }) => {
     useState<PanelVisibilityState>(initPanelVisbilityState());
 
   useEffect(() => {
-    getUserHistories().catch((error) =>
-      console.error("Error getting user's game histories:", error)
-    );
+    const getLocalHistories = async () => {
+      const data = await AsyncStorage.getItem("@Game_Histories");
+      if (!data) setGameHistories([null, null, null]);
+      else setGameHistories(JSON.parse(data));
+    };
+    getLocalHistories();
   }, []);
 
   const obtainUserGameHistories = useCallback(async () => {
     if (userInfo) {
       const userId = userInfo.id.toString();
-      let gameHistories = await getUserHistories();
-      if (!gameHistories) {
-        const docSnap = await getDoc(doc(db, "users", userId));
-        if (docSnap.exists()) {
-          gameHistories = docSnap.data().histories;
-        } else {
-          gameHistories = [null, null, null];
-        }
+      const docSnap = await getDoc(doc(db, "users", userId));
+      let cloudHistories;
+      if (docSnap.exists()) {
+        cloudHistories = docSnap.data().histories;
+      } else {
+        cloudHistories = [null, null, null];
       }
-      setGameHistories(gameHistories);
+      setGameHistories(cloudHistories);
     }
   }, [userInfo]);
 
@@ -85,7 +80,7 @@ const StartScreen: React.FC<StartScreenProps> = ({ navigation, route }) => {
       initPanelVisbilityState();
     });
     return unsubscribe;
-  });
+  }, [navigation]);
 
   useEffect(() => {
     const gameSlot = route.params?.gameSlot;
@@ -127,10 +122,10 @@ const StartScreen: React.FC<StartScreenProps> = ({ navigation, route }) => {
           onPress={openGameHistory}
           mode="contained"
           labelStyle={buttonStyles.buttonText}
-          buttonColor="red"
+          buttonColor={colors.sinopia}
           textColor="white"
         >
-          Start Game
+          Multiplayer
         </Button>
         <Button
           style={commonStyles.marginTop10}

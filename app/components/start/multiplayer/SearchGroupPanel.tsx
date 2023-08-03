@@ -175,6 +175,7 @@ const SearchGroupPanel: React.FC<SearchGroupPanelProps> = ({
       </View>
       {isEnteringGame || (
         <TouchableOpacity
+          activeOpacity={0.8}
           onPress={closePanelHandler}
           style={[buttonStyles.exitButton, commonStyles.marginTop10]}
         >

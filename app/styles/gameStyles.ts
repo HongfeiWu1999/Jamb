@@ -159,11 +159,11 @@ export const gameStyles = StyleSheet.create({
     fontSize: 30,
     textAlign: "center",
     fontWeight: "bold",
-    color: colors.coral,
+    color: colors.red,
   },
   warningBody: {
     marginTop: 20,
-    fontSize: 15,
+    fontSize: 16,
     textAlign: "justify",
     fontWeight: "bold",
     color: colors.tableBackground,
