@@ -2,12 +2,11 @@ import React, { useState, useCallback } from "react";
 import { Route } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-import SinglePlayerMatch from "./singlePlayer/SinglePlayerMatch";
-import MultiPlayerMatch from "./multiPlayer/MultiPlayerMatch";
+import MultiplayerMatch from "./multiplayer/MultiplayerMatch";
 import { GameState, HelperState } from "../../types/types";
-import { View, StyleSheet } from "react-native";
-import colors from "../../config/colors";
+import { View } from "react-native";
 import { gameStyles } from "../../styles/GameStyles";
+import SoloMatch from "./singleplayer/SoloMatch";
 
 interface GameScreenProps {
   navigation: NativeStackNavigationProp<any, any>;
@@ -62,13 +61,13 @@ const GameScreen: React.FC<GameScreenProps> = ({ navigation, route }) => {
   return (
     <View style={gameStyles.mainBackGround}>
       {(route.params?.gameSlot !== undefined && (
-        <SinglePlayerMatch
+        <SoloMatch
           navigation={navigation}
           gameSlot={route.params?.gameSlot}
           operations={gameOperations}
         />
       )) || (
-        <MultiPlayerMatch
+        <MultiplayerMatch
           navigation={navigation}
           userSlot={route.params?.userSlot}
           groupId={route.params?.groupId}

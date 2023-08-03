@@ -4,42 +4,53 @@ import { Button } from "react-native-paper";
 import { Route } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../../database/firebase";
 
 import colors from "../../config/colors";
 import LoginScreen from "./login/LoginScreen";
-import { GameState, UserState } from "../../types/types";
+import { GameState, PanelVisibilityState, UserState } from "../../types/types";
 import GameHistories from "./histories/GameHistories";
-import MultiPlayerPanel from "./multiplayer/MultiPlayerPanel";
 import StartTitle from "./StartTitle";
 import {
   buttonStyles,
   commonStyles,
   gameStyles,
 } from "../../styles/GameStyles";
+import OptionPanel from "./options/OptionPanel";
+import MultiplayerPanel from "./multiplayer/MultiplayerPanel";
 
 interface StartScreenProps {
   navigation: NativeStackNavigationProp<any, any>;
   route: Route<any, any>;
 }
 
+const getUserHistories = async () => {
+  const data = await AsyncStorage.getItem("@Game_Histories");
+  if (!data) return [null, null, null];
+  return JSON.parse(data);
+};
+
+const initPanelVisbilityState = () => ({
+  isLoginPanelVisible: false,
+  isHistoryPanelVisible: false,
+  isMultiplayerPanelVisible: false,
+  isOptionPanelVisible: false,
+});
+
 const StartScreen: React.FC<StartScreenProps> = ({ navigation, route }) => {
   const [userInfo, setUserInfo] = useState<UserState | undefined>(undefined);
-  const [userGameHistories, setUserGameHistories] = useState<
-    (GameState | null)[]
-  >([]);
-  const [historyVisibility, setHistoryVisibility] = useState<boolean>(false);
-  const [multiPlayerVisibility, setMultiPlayerVisibility] =
-    useState<boolean>(false);
+  const [gameHistories, setGameHistories] = useState<(GameState | null)[]>([]);
+  const [panelVisibilityState, setPanelVisibilityState] =
+    useState<PanelVisibilityState>(initPanelVisbilityState());
 
   useEffect(() => {
-    obtainUserGameHistories().catch((error) => {
-      console.error("Error accesing user's game histories:", error);
-    });
-  }, [userInfo]);
+    getUserHistories().catch((error) =>
+      console.error("Error getting user's game histories:", error)
+    );
+  }, []);
 
-  const obtainUserGameHistories = async () => {
+  const obtainUserGameHistories = useCallback(async () => {
     if (userInfo) {
       const userId = userInfo.id.toString();
       let gameHistories = await getUserHistories();
@@ -51,35 +62,27 @@ const StartScreen: React.FC<StartScreenProps> = ({ navigation, route }) => {
           gameHistories = [null, null, null];
         }
       }
-      setUserGameHistories(gameHistories);
-    } else {
-      setUserGameHistories([]);
+      setGameHistories(gameHistories);
     }
-  };
-
-  const getUserHistories = async () => {
-    try {
-      const data = await AsyncStorage.getItem("@Game_Histories");
-      if (!data) return null;
-      return JSON.parse(data);
-    } catch (error) {
-      console.error("Error getting user's game histories:", error);
-      throw error;
-    }
-  };
+  }, [userInfo]);
 
   const openGameHistory = useCallback(() => {
-    setHistoryVisibility(true);
-  }, [setHistoryVisibility]);
+    setPanelVisibilityState((prevState) => ({
+      ...prevState,
+      isHistoryPanelVisible: true,
+    }));
+  }, [setPanelVisibilityState]);
 
   const openMultiplayerPanel = useCallback(() => {
-    setMultiPlayerVisibility(true);
-  }, [setMultiPlayerVisibility]);
+    setPanelVisibilityState((prevState) => ({
+      ...prevState,
+      isMultiplayerPanelVisible: true,
+    }));
+  }, [setPanelVisibilityState]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("blur", () => {
-      setHistoryVisibility(false);
-      setMultiPlayerVisibility(false);
+      initPanelVisbilityState();
     });
     return unsubscribe;
   });
@@ -88,7 +91,7 @@ const StartScreen: React.FC<StartScreenProps> = ({ navigation, route }) => {
     const gameSlot = route.params?.gameSlot;
     const newGameState = route.params?.gameState;
     if (!isNaN(gameSlot)) {
-      setUserGameHistories((prevState) =>
+      setGameHistories((prevState) =>
         prevState.map((gameHistory, index) =>
           index === gameSlot ? newGameState : gameHistory
         )
@@ -96,36 +99,15 @@ const StartScreen: React.FC<StartScreenProps> = ({ navigation, route }) => {
     }
   }, [route.params?.gameSlot, route.params?.gameState]);
 
-  const closeUserSession = () => {
-    const closeUserSessionAsync = async () => {
-      if (userInfo) {
-        const userId = userInfo.id.toString();
-        await setDoc(doc(db, "users", userId), {
-          histories: userGameHistories,
-        });
-        await AsyncStorage.removeItem("@User");
-        await AsyncStorage.removeItem("@Game_Histories");
-        setUserInfo(undefined);
-        setUserGameHistories([]);
-      }
-    };
-    closeUserSessionAsync().catch((error) =>
-      console.error("Error closing user session:", error)
-    );
-  };
-
-  const saveLocalGameHistories = async () => {
-    if (userGameHistories && userGameHistories.length !== 0) {
-      await AsyncStorage.setItem(
-        "@Game_Histories",
-        JSON.stringify(userGameHistories)
-      );
-    }
-  };
-
   useEffect(() => {
     const subscription = AppState.addEventListener("change", (nextAppState) => {
       if (nextAppState.match(/inactive|background/)) {
+        const saveLocalGameHistories = async () => {
+          await AsyncStorage.setItem(
+            "@Game_Histories",
+            JSON.stringify(gameHistories)
+          );
+        };
         saveLocalGameHistories().catch((error) =>
           console.error("Error saving user's game histories:", error)
         );
@@ -160,32 +142,33 @@ const StartScreen: React.FC<StartScreenProps> = ({ navigation, route }) => {
         >
           Multiplayer
         </Button>
-        <Button
-          style={[commonStyles.marginTop10, !userInfo && { display: "none" }]}
-          onPress={closeUserSession}
-          labelStyle={buttonStyles.buttonText}
-          icon="logout"
-          mode="contained"
-          buttonColor="white"
-          textColor="black"
-        >
-          Sign off
-        </Button>
-        <GameHistories
-          navigation={navigation}
-          historyVisibility={historyVisibility}
-          setHistoryVisibility={setHistoryVisibility}
-          gameHistories={userGameHistories}
-          setGameHistories={setUserGameHistories}
-        />
-        <LoginScreen userInfo={userInfo} setUserInfo={setUserInfo} />
-        <MultiPlayerPanel
-          navigation={navigation}
-          isVisible={multiPlayerVisibility}
-          setVisibility={setMultiPlayerVisibility}
-          userInfo={userInfo}
-        />
       </View>
+      <LoginScreen
+        setUserInfo={setUserInfo}
+        panelVisibility={panelVisibilityState.isLoginPanelVisible}
+        setPanelVisibility={setPanelVisibilityState}
+      />
+      <GameHistories
+        navigation={navigation}
+        panelVisibility={panelVisibilityState.isHistoryPanelVisible}
+        setPanelVisibility={setPanelVisibilityState}
+        gameHistories={gameHistories}
+        setGameHistories={setGameHistories}
+      />
+      <MultiplayerPanel
+        navigation={navigation}
+        panelVisibility={panelVisibilityState.isMultiplayerPanelVisible}
+        setPanelVisibility={setPanelVisibilityState}
+        userInfo={userInfo}
+      />
+      <OptionPanel
+        panelVisibility={panelVisibilityState.isOptionPanelVisible}
+        setPanelVisibility={setPanelVisibilityState}
+        userInfo={userInfo}
+        setUserInfo={setUserInfo}
+        gameHistories={gameHistories}
+        setGameHistories={setGameHistories}
+      />
     </View>
   );
 };

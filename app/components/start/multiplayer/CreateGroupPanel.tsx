@@ -26,27 +26,32 @@ import {
 interface CreateGroupPanelProps {
   userInfo: any;
   startGameHandler: (userSlot: number, groupId: string) => void;
-  setCreateGroupPanelVisibility: React.Dispatch<React.SetStateAction<boolean>>;
+  createGroupPanelVisibility: boolean;
+  closeCreateGroupPanel: () => void;
 }
 
 const CreateGroupPanel: React.FC<CreateGroupPanelProps> = ({
   userInfo,
   startGameHandler,
-  setCreateGroupPanelVisibility,
+  createGroupPanelVisibility,
+  closeCreateGroupPanel,
 }) => {
   const [groupName, setGroupName] = useState<string>("");
   const [isValid, setIsValid] = useState<boolean>(true);
   const [groupId, setGroupId] = useState<string>("");
 
-  const closePanel = useCallback(() => {
-    if (groupId) {
+  useEffect(() => {
+    if (!closeCreateGroupPanel && groupId) {
       deleteDoc(doc(db, "tables", groupId)).catch((error) =>
         console.error("Error deleting game group:", error)
       );
     }
+  }, [createGroupPanelVisibility]);
+
+  const closePanelHandler = useCallback(() => {
     setGroupName("");
-    setCreateGroupPanelVisibility(false);
-  }, [groupId, setGroupName, setCreateGroupPanelVisibility]);
+    closeCreateGroupPanel();
+  }, [setGroupName, closeCreateGroupPanel]);
 
   const createGroup = useCallback(() => {
     if (groupName) {
@@ -141,7 +146,7 @@ const CreateGroupPanel: React.FC<CreateGroupPanelProps> = ({
 
       <View style={styles.buttonView}>
         <TouchableOpacity
-          onPress={closePanel}
+          onPress={closePanelHandler}
           style={[buttonStyles.exitButton, commonStyles.marginTop10]}
           activeOpacity={0.8}
         >

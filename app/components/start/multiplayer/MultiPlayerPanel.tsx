@@ -12,18 +12,21 @@ import {
   commonStyles,
   gameStyles,
 } from "../../../styles/GameStyles";
+import { PanelVisibilityState } from "../../../types/types";
 
-interface MultiPlayerPanelProps {
+interface MultiplayerPanelProps {
   navigation: NativeStackNavigationProp<any, any>;
-  isVisible: boolean;
-  setVisibility: React.Dispatch<React.SetStateAction<boolean>>;
+  panelVisibility: boolean;
+  setPanelVisibility: React.Dispatch<
+    React.SetStateAction<PanelVisibilityState>
+  >;
   userInfo: any;
 }
 
-const MultiPlayerPanel: React.FC<MultiPlayerPanelProps> = ({
+const MultiplayerPanel: React.FC<MultiplayerPanelProps> = ({
   navigation,
-  isVisible,
-  setVisibility,
+  panelVisibility,
+  setPanelVisibility,
   userInfo,
 }) => {
   const [createGroupPanelVisibility, setCreateGroupPanelVisibility] =
@@ -31,17 +34,28 @@ const MultiPlayerPanel: React.FC<MultiPlayerPanelProps> = ({
   const [searchGroupPanelVisibility, setSearchGroupPanelVisibility] =
     useState<boolean>(false);
 
-  const closePanel = useCallback(() => {
-    setVisibility(false);
-  }, []);
+  const closeMultiplayerPanel = useCallback(() => {
+    setPanelVisibility((prevState) => ({
+      ...prevState,
+      isMultiplayerPanelVisible: false,
+    }));
+  }, [setPanelVisibility]);
 
   const openCreateGroupPanel = useCallback(() => {
     setCreateGroupPanelVisibility(true);
-  }, []);
+  }, [setCreateGroupPanelVisibility]);
 
   const openSearchGroupPanel = useCallback(() => {
     setSearchGroupPanelVisibility(true);
-  }, []);
+  }, [setSearchGroupPanelVisibility]);
+
+  const closeCreateGroupPanel = useCallback(() => {
+    setCreateGroupPanelVisibility(false);
+  }, [setCreateGroupPanelVisibility]);
+
+  const closeSearchGroupPanel = useCallback(() => {
+    setSearchGroupPanelVisibility(false);
+  }, [setSearchGroupPanelVisibility]);
 
   const startGameHandler = useCallback((userSlot: number, groupId: string) => {
     navigation.navigate("GameScreen", {
@@ -53,8 +67,9 @@ const MultiPlayerPanel: React.FC<MultiPlayerPanelProps> = ({
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("blur", () => {
-      setCreateGroupPanelVisibility(false);
-      setSearchGroupPanelVisibility(false);
+      closeMultiplayerPanel();
+      closeCreateGroupPanel();
+      closeSearchGroupPanel();
     });
     return unsubscribe;
   });
@@ -62,8 +77,8 @@ const MultiPlayerPanel: React.FC<MultiPlayerPanelProps> = ({
   useEffect(() => {
     const subscription = AppState.addEventListener("change", (nextAppState) => {
       if (nextAppState.match(/inactive|background/)) {
-        setCreateGroupPanelVisibility(false);
-        setSearchGroupPanelVisibility(false);
+        closeCreateGroupPanel();
+        closeSearchGroupPanel();
       }
     });
 
@@ -73,21 +88,35 @@ const MultiPlayerPanel: React.FC<MultiPlayerPanelProps> = ({
   });
 
   return (
-    <Modal transparent={true} animationType="fade" visible={isVisible}>
+    <Modal
+      transparent={true}
+      animationType="fade"
+      visible={panelVisibility}
+      onRequestClose={() => {
+        if (createGroupPanelVisibility) {
+          closeCreateGroupPanel();
+        } else if (searchGroupPanelVisibility) {
+          closeSearchGroupPanel();
+        } else {
+          closeMultiplayerPanel();
+        }
+      }}
+    >
       <View style={gameStyles.modalContainer}>
         <View style={gameStyles.viewContainer2}>
           {(createGroupPanelVisibility && (
             <CreateGroupPanel
               userInfo={userInfo}
               startGameHandler={startGameHandler}
-              setCreateGroupPanelVisibility={setCreateGroupPanelVisibility}
+              createGroupPanelVisibility={createGroupPanelVisibility}
+              closeCreateGroupPanel={closeCreateGroupPanel}
             />
           )) ||
             (searchGroupPanelVisibility && (
               <SearchGroupPanel
                 userInfo={userInfo}
                 startGameHandler={startGameHandler}
-                setSearchGroupPanelVisibility={setSearchGroupPanelVisibility}
+                closeSearchGroupPanel={closeCreateGroupPanel}
               />
             )) || (
               <>
@@ -113,7 +142,7 @@ const MultiPlayerPanel: React.FC<MultiPlayerPanelProps> = ({
                   Join Group{"  "}
                 </Button>
                 <TouchableOpacity
-                  onPress={closePanel}
+                  onPress={closeMultiplayerPanel}
                   style={[buttonStyles.exitButton, commonStyles.marginTop10]}
                   activeOpacity={0.8}
                 >
@@ -128,4 +157,4 @@ const MultiPlayerPanel: React.FC<MultiPlayerPanelProps> = ({
   );
 };
 
-export default React.memo(MultiPlayerPanel);
+export default React.memo(MultiplayerPanel);

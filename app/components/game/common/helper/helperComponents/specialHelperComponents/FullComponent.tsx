@@ -27,19 +27,25 @@ const KentaComponent: React.FC<KentaComponentProps> = ({ helperState }) => {
       requiredNumber2: 0,
     });
 
-  const setThreeRequiredNumber = useCallback((requiredNumber: number) => {
-    setProbabilityState((prevState) => ({
-      ...prevState,
-      requiredNumber1: requiredNumber,
-    }));
-  }, []);
+  const setThreeRequiredNumber = useCallback(
+    (requiredNumber: number) => {
+      setProbabilityState((prevState) => ({
+        ...prevState,
+        requiredNumber1: requiredNumber,
+      }));
+    },
+    [setProbabilityState]
+  );
 
-  const setTwoRequiredNumber = useCallback((requiredNumber: number) => {
-    setProbabilityState((prevState) => ({
-      ...prevState,
-      requiredNumber2: requiredNumber,
-    }));
-  }, []);
+  const setTwoRequiredNumber = useCallback(
+    (requiredNumber: number) => {
+      setProbabilityState((prevState) => ({
+        ...prevState,
+        requiredNumber2: requiredNumber,
+      }));
+    },
+    [setProbabilityState]
+  );
 
   return (
     <View>

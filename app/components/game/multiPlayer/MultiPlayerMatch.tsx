@@ -16,7 +16,7 @@ import GoBackAlert from "./GoBackAlert";
 import GameComponents from "../common/GameComponents";
 import { commonStyles } from "../../../styles/GameStyles";
 
-interface MultiPlayerMatchProps {
+interface MultiplayerMatchProps {
   navigation: NativeStackNavigationProp<any, any>;
   userSlot: number;
   groupId: string;
@@ -52,7 +52,7 @@ const toastConfig = {
   ),
 };
 
-const MultiPlayerMatch: React.FC<MultiPlayerMatchProps> = ({
+const MultiplayerMatch: React.FC<MultiplayerMatchProps> = ({
   navigation,
   userSlot,
   groupId,
@@ -325,4 +325,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default React.memo(MultiPlayerMatch);
+export default React.memo(MultiplayerMatch);

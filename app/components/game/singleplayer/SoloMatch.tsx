@@ -5,13 +5,13 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { GameOperations } from "../../../types/types";
 import GameComponents from "../common/GameComponents";
 
-interface SinglePlayerMatchProps {
+interface SoloMatchProps {
   navigation: NativeStackNavigationProp<any, any>;
   gameSlot: number;
   operations: GameOperations;
 }
 
-const SinglePlayerMatch: React.FC<SinglePlayerMatchProps> = ({
+const SoloMatch: React.FC<SoloMatchProps> = ({
   navigation,
   gameSlot,
   operations,
@@ -74,4 +74,4 @@ const SinglePlayerMatch: React.FC<SinglePlayerMatchProps> = ({
   );
 };
 
-export default React.memo(SinglePlayerMatch);
+export default React.memo(SoloMatch);

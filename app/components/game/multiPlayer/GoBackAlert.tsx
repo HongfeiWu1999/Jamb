@@ -31,7 +31,7 @@ const GoBackAlert: React.FC<GoBackAlertProps> = ({
 }) => {
   const hideAlert = useCallback(() => {
     setIsAlertVisible(false);
-  }, []);
+  }, [setIsAlertVisible]);
 
   const backToStartScreen = useCallback(() => {
     const opponentSlot = (userSlot + 1) % 2;

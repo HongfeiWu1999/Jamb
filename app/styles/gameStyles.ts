@@ -205,6 +205,9 @@ export const commonStyles = StyleSheet.create({
   paddingHorizontal15: {
     paddingHorizontal: 15,
   },
+  paddingHorizontal20: {
+    paddingHorizontal: 20,
+  },
   centeredView: {
     alignItems: "center",
   },

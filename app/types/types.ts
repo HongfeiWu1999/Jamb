@@ -108,3 +108,10 @@ export interface Conection {
   myConection: boolean;
   opponentConection: boolean;
 }
+
+export interface PanelVisibilityState {
+  isLoginPanelVisible: boolean;
+  isHistoryPanelVisible: boolean;
+  isMultiplayerPanelVisible: boolean;
+  isOptionPanelVisible: boolean;
+}

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { View, Modal, StyleSheet, Text, TouchableOpacity } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
@@ -6,15 +6,23 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import GoogleImg from "../../../assets/google.svg";
 import colors from "../../../config/colors";
 import { gameStyles } from "../../../styles/GameStyles";
+import { PanelVisibilityState } from "../../../types/types";
 
 interface LoginScreenProps {
-  userInfo: any;
   setUserInfo: React.Dispatch<React.SetStateAction<any>>;
+  panelVisibility: boolean;
+  setPanelVisibility: React.Dispatch<
+    React.SetStateAction<PanelVisibilityState>
+  >;
 }
 
 WebBrowser.maybeCompleteAuthSession();
 
-const LoginScreen: React.FC<LoginScreenProps> = ({ userInfo, setUserInfo }) => {
+const LoginScreen: React.FC<LoginScreenProps> = ({
+  setUserInfo,
+  panelVisibility,
+  setPanelVisibility,
+}) => {
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
     iosClientId:
       "961179868263-rilh3535tf0hjok4d6790n9kfullgkmg.apps.googleusercontent.com",
@@ -65,14 +73,27 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ userInfo, setUserInfo }) => {
       const user = await response.json();
       await AsyncStorage.setItem("@User", JSON.stringify(user));
       setUserInfo(user);
+      closeLoginPanel();
     } catch (error) {
       console.error("Error getting user info:", error);
       throw error;
     }
   };
 
+  const closeLoginPanel = useCallback(() => {
+    setPanelVisibility((prevState) => ({
+      ...prevState,
+      isLoginPanelVisible: false,
+    }));
+  }, [setPanelVisibility]);
+
   return (
-    <Modal transparent={true} animationType="fade" visible={!userInfo}>
+    <Modal
+      transparent={true}
+      animationType="fade"
+      visible={panelVisibility}
+      onRequestClose={closeLoginPanel}
+    >
       <View style={gameStyles.modalContainer}>
         <View style={gameStyles.viewContainer2}>
           <Text style={gameStyles.title}>Sign In</Text>

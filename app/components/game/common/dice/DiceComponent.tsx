@@ -51,7 +51,7 @@ const DiceComponent: React.FC<DiceProps> = ({
     ) {
       setIsOnlyBlockColumnRemains(true);
     }
-  }, accionColumns);
+  }, [accionColumns, setIsOnlyBlockColumnRemains]);
 
   const isValid =
     isPlayerTurn &&

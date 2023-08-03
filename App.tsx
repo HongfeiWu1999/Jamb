@@ -3,7 +3,7 @@ import GameScreen from "./app/components/game/GameScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import StartScreen from "./app/components/start/StartScreen";
-import ConectionWarningScreen from "./app/components/game/multiPlayer/ConectionWarningScreen";
+import ConectionWarningScreen from "./app/components/game/multiplayer/ConectionWarningScreen";
 import { View, StatusBar } from "react-native";
 import colors from "./app/config/colors";
 import { commonStyles } from "./app/styles/GameStyles";

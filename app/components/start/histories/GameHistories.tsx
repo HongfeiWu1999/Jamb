@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import { View, Modal, StyleSheet, Text, TouchableOpacity } from "react-native";
 
 import colors from "../../../config/colors";
-import { GameState } from "../../../types/types";
+import { GameState, PanelVisibilityState } from "../../../types/types";
 import GameHistory from "./GameHistory";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import {
@@ -13,25 +13,30 @@ import {
 
 interface GameHistoriesProps {
   navigation: NativeStackNavigationProp<any, any>;
-  historyVisibility: boolean;
-  setHistoryVisibility: React.Dispatch<React.SetStateAction<boolean>>;
+  panelVisibility: boolean;
+  setPanelVisibility: React.Dispatch<
+    React.SetStateAction<PanelVisibilityState>
+  >;
   gameHistories: (GameState | null)[];
   setGameHistories: React.Dispatch<React.SetStateAction<(GameState | null)[]>>;
 }
 
 const GameHistories: React.FC<GameHistoriesProps> = ({
   navigation,
-  historyVisibility,
-  setHistoryVisibility,
+  panelVisibility,
+  setPanelVisibility,
   gameHistories,
   setGameHistories,
 }) => {
-  const closeGameHistory = useCallback(() => {
-    setHistoryVisibility(false);
-  }, [setHistoryVisibility]);
+  const closeHistoryPanel = useCallback(() => {
+    setPanelVisibility((prevState) => ({
+      ...prevState,
+      isHistoryPanelVisible: false,
+    }));
+  }, [setPanelVisibility]);
 
   return (
-    <Modal transparent={true} animationType="fade" visible={historyVisibility}>
+    <Modal transparent={true} animationType="fade" visible={panelVisibility}>
       <View style={gameStyles.modalContainer}>
         <View style={styles.viewContainer}>
           {Array.from({ length: 3 }, (_, index) => (
@@ -44,7 +49,7 @@ const GameHistories: React.FC<GameHistoriesProps> = ({
             />
           ))}
           <TouchableOpacity
-            onPress={closeGameHistory}
+            onPress={closeHistoryPanel}
             style={[buttonStyles.exitButton, commonStyles.marginTop10]}
             activeOpacity={0.8}
           >

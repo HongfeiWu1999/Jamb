@@ -25,13 +25,13 @@ import { buttonStyles, commonStyles } from "../../../styles/GameStyles";
 interface SearchGroupPanelProps {
   userInfo: any;
   startGameHandler: (userSlot: number, groupId: string) => void;
-  setSearchGroupPanelVisibility: React.Dispatch<React.SetStateAction<boolean>>;
+  closeSearchGroupPanel: () => void;
 }
 
 const SearchGroupPanel: React.FC<SearchGroupPanelProps> = ({
   userInfo,
   startGameHandler,
-  setSearchGroupPanelVisibility,
+  closeSearchGroupPanel,
 }) => {
   const [isEnteringGame, setIsEnteringGame] = useState<boolean>(false);
   const [groupIdList, setGroupIdList] = useState<string[]>([]);
@@ -46,11 +46,11 @@ const SearchGroupPanel: React.FC<SearchGroupPanelProps> = ({
     });
   };
 
-  const closePanel = useCallback(() => {
+  const closePanelHandler = useCallback(() => {
     setGroupIdList([]);
     setGroupList([]);
-    setSearchGroupPanelVisibility(false);
-  }, [setSearchGroupPanelVisibility]);
+    closeSearchGroupPanel();
+  }, [setGroupIdList, setGroupList, closeSearchGroupPanel]);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "tables"), (snapshot) => {
@@ -74,42 +74,45 @@ const SearchGroupPanel: React.FC<SearchGroupPanelProps> = ({
     return () => unsubscribe();
   });
 
-  const joinGroup = useCallback((groupId: string) => {
-    setIsEnteringGame(true);
-    const joinGroupInDB = async () => {
-      const groupRef = doc(db, "tables", groupId);
-      const docSnap = await getDoc(groupRef);
-      let success = false;
-      if (docSnap.exists()) {
-        const groupData = docSnap.data();
-        if (groupData.users.length === 1) {
-          await updateDoc(groupRef, {
-            users: [
-              ...groupData.users,
-              {
-                image: userInfo?.picture,
-                name: userInfo?.name,
-                score: 0,
-                active: true,
-                finished: false,
-              },
-            ],
-          });
-          success = true;
-          startGameHandler(1, groupId);
+  const joinGroup = useCallback(
+    (groupId: string) => {
+      setIsEnteringGame(true);
+      const joinGroupInDB = async () => {
+        const groupRef = doc(db, "tables", groupId);
+        const docSnap = await getDoc(groupRef);
+        let success = false;
+        if (docSnap.exists()) {
+          const groupData = docSnap.data();
+          if (groupData.users.length === 1) {
+            await updateDoc(groupRef, {
+              users: [
+                ...groupData.users,
+                {
+                  image: userInfo?.picture,
+                  name: userInfo?.name,
+                  score: 0,
+                  active: true,
+                  finished: false,
+                },
+              ],
+            });
+            success = true;
+            startGameHandler(1, groupId);
+          }
         }
-      }
-      if (!success) {
-        showErrorToast("The match is no longer available.");
-        setIsEnteringGame(false);
-      }
-    };
-    setTimeout(() => {
-      joinGroupInDB().catch((error) =>
-        console.error("Error joining the match: ", error)
-      );
-    }, 750);
-  }, []);
+        if (!success) {
+          showErrorToast("The match is no longer available.");
+          setIsEnteringGame(false);
+        }
+      };
+      setTimeout(() => {
+        joinGroupInDB().catch((error) =>
+          console.error("Error joining the match: ", error)
+        );
+      }, 750);
+    },
+    [db, setIsEnteringGame]
+  );
 
   return (
     <>
@@ -172,7 +175,7 @@ const SearchGroupPanel: React.FC<SearchGroupPanelProps> = ({
       </View>
       {isEnteringGame || (
         <TouchableOpacity
-          onPress={closePanel}
+          onPress={closePanelHandler}
           style={[buttonStyles.exitButton, commonStyles.marginTop10]}
         >
           <Text style={commonStyles.baseText}>Back</Text>
