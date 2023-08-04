@@ -115,3 +115,15 @@ export interface PanelVisibilityState {
   isMultiplayerPanelVisible: boolean;
   isOptionPanelVisible: boolean;
 }
+
+export interface GameSettings {
+  isVolumeOn: boolean;
+}
+
+export interface AlertSettings {
+  alertVisibility: boolean;
+  title: string;
+  body: string;
+  onAccept: () => void;
+  onReject: () => void;
+}

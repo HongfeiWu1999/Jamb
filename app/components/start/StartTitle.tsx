@@ -21,14 +21,7 @@ const StartTitle: React.FC<StartTitleProps> = () => {
   return (
     <View style={styles.titleView} onLayout={handleLayout}>
       <Text style={[styles.gameTitle, { fontSize }]}>JAMB</Text>
-      <View
-        style={{
-          width: "75%",
-          height: 5,
-          backgroundColor: "white",
-          borderRadius: 5,
-        }}
-      ></View>
+      <View style={styles.lineView} />
       <View style={styles.optionView}>
         <MaterialCommunityIcons name="dice-1" size={23} color="white" />
         <MaterialCommunityIcons name="dice-2" size={23} color="white" />
@@ -58,6 +51,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+  },
+  lineView: {
+    width: "75%",
+    height: 5,
+    backgroundColor: "white",
+    borderRadius: 5,
   },
 });
 

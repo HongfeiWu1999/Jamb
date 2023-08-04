@@ -1,60 +1,42 @@
 import React, { useCallback } from "react";
-import { Image } from "react-native";
+import { View, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { doc, setDoc } from "firebase/firestore";
-import { db } from "../../../../database/firebase";
+import { Avatar } from "react-native-paper";
 
 import Option from "./Option";
-import { GameState, PanelVisibilityState } from "../../../types/types";
 interface SignInOutOptionProps {
   userInfo: any;
   setUserInfo: React.Dispatch<React.SetStateAction<any>>;
-  gameHistories: (GameState | null)[];
-  setPanelVisibility: React.Dispatch<
-    React.SetStateAction<PanelVisibilityState>
-  >;
+  openLoginPanel: () => void;
 }
 
 const SignInOutOption: React.FC<SignInOutOptionProps> = ({
   userInfo,
   setUserInfo,
-  gameHistories,
-  setPanelVisibility,
+  openLoginPanel,
 }) => {
-  const openLoginPanel = useCallback(() => {
-    setPanelVisibility((prevState) => ({
-      ...prevState,
-      isLoginPanelVisible: true,
-    }));
-  }, [setPanelVisibility]);
-
   const closeUserSession = useCallback(() => {
     const closeUserSessionAsync = async () => {
-      const userId = userInfo.id.toString();
-      await setDoc(doc(db, "users", userId), {
-        histories: gameHistories,
-      });
       await AsyncStorage.removeItem("@User");
       setUserInfo(undefined);
     };
     closeUserSessionAsync().catch((error) =>
       console.error("Error closing user session:", error)
     );
-  }, [userInfo, setUserInfo]);
+  }, [setUserInfo]);
 
   return (
     <Option
       onPress={(userInfo && closeUserSession) || openLoginPanel}
       icon={
         (userInfo && (
-          <Image
-            style={{ width: 45, height: 45 }}
-            source={require("../../../assets/logout.png")}
-          />
+          <View style={{ borderRadius: 25, borderWidth: 2.5 }}>
+            <Avatar.Image size={40} source={{ uri: userInfo.picture }} />
+          </View>
         )) || (
           <Image
             style={{ width: 45, height: 45 }}
-            source={require("../../../assets/login.png")}
+            source={require("../../../../assets/login.png")}
           />
         )
       }

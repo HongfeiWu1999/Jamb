@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import {
   View,
   Modal,
@@ -8,16 +8,26 @@ import {
   Animated,
   Text,
 } from "react-native";
+import Toast from "react-native-toast-message";
 import { commonStyles, gameStyles } from "../../../styles/GameStyles";
-import SignInOutOption from "./SignInOutOption";
-import VolumeOption from "./VolumeOption";
-import { GameState, PanelVisibilityState } from "../../../types/types";
+import SignInOutOption from "./components/SignInOutOption";
+import VolumeOption from "./components/VolumeOption";
+import {
+  GameSettings,
+  GameState,
+  MessageType,
+  PanelVisibilityState,
+} from "../../../types/types";
+import SaveHistoryOption from "./components/SaveHistoryOption";
+import LoadHistoryOption from "./components/LoadHistoryOption";
 
 interface OptionPanelProps {
   panelVisibility: boolean;
   setPanelVisibility: React.Dispatch<
     React.SetStateAction<PanelVisibilityState>
   >;
+  gameSettings: GameSettings;
+  setGameSettings: React.Dispatch<React.SetStateAction<GameSettings>>;
   userInfo: any;
   setUserInfo: React.Dispatch<React.SetStateAction<any>>;
   gameHistories: (GameState | null)[];
@@ -29,11 +39,15 @@ const SIZE = 35;
 const OptionPanel: React.FC<OptionPanelProps> = ({
   panelVisibility,
   setPanelVisibility,
+  gameSettings,
+  setGameSettings,
   userInfo,
   setUserInfo,
   gameHistories,
   setGameHistories,
 }) => {
+  const [messageQueue, setMessageQueue] = useState<MessageType[]>([]);
+  const [isDisplaying, setIsDisplaying] = useState<boolean>(false);
   const rotateAnimation = useRef(new Animated.Value(0)).current;
 
   const onPressHandler = useCallback(() => {
@@ -55,6 +69,56 @@ const OptionPanel: React.FC<OptionPanelProps> = ({
     outputRange: ["0deg", "360deg"],
   });
 
+  const openLoginPanel = useCallback(() => {
+    setPanelVisibility((prevState) => ({
+      ...prevState,
+      isLoginPanelVisible: true,
+    }));
+  }, [setPanelVisibility]);
+
+  const closeOptionPanel = useCallback(() => {
+    setMessageQueue([]);
+    setIsDisplaying(false);
+    setPanelVisibility((prevState) => ({
+      ...prevState,
+      isOptionPanelVisible: false,
+    }));
+  }, [setPanelVisibility]);
+
+  const enqueueMessage = (type: string, text1: string, text2: string) => {
+    setMessageQueue((prevQueue) => [...prevQueue, { type, text1, text2 }]);
+  };
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    const showToastFromQueue = () => {
+      if (messageQueue.length > 0 && !isDisplaying) {
+        setIsDisplaying(true);
+        const { type, text1, text2 } = messageQueue[0];
+        Toast.show({
+          type,
+          text1: text1,
+          text2: text2,
+          visibilityTime: 1000,
+          autoHide: true,
+          onHide: () => {
+            setMessageQueue((prevQueue) => prevQueue.slice(1));
+            setIsDisplaying(false);
+          },
+        });
+      }
+    };
+
+    timer = setInterval(() => {
+      showToastFromQueue();
+    }, 750);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [messageQueue, isDisplaying]);
+
   return (
     <>
       <TouchableOpacity
@@ -73,12 +137,7 @@ const OptionPanel: React.FC<OptionPanelProps> = ({
         transparent={true}
         animationType="fade"
         visible={panelVisibility}
-        onRequestClose={() =>
-          setPanelVisibility((prevState) => ({
-            ...prevState,
-            isOptionPanelVisible: false,
-          }))
-        }
+        onRequestClose={closeOptionPanel}
       >
         <View style={gameStyles.modalContainer}>
           <View
@@ -87,7 +146,7 @@ const OptionPanel: React.FC<OptionPanelProps> = ({
               commonStyles.paddingHorizontal20,
             ]}
           >
-            <Text>Game Setting</Text>
+            <Text style={gameStyles.title}>Game Settings</Text>
             <View
               style={{
                 flexDirection: "row",
@@ -97,13 +156,28 @@ const OptionPanel: React.FC<OptionPanelProps> = ({
               <SignInOutOption
                 userInfo={userInfo}
                 setUserInfo={setUserInfo}
-                gameHistories={gameHistories}
-                setPanelVisibility={setPanelVisibility}
+                openLoginPanel={openLoginPanel}
               />
-              <VolumeOption />
+              <VolumeOption
+                gameSettings={gameSettings}
+                setGameSettings={setGameSettings}
+              />
+              <SaveHistoryOption
+                userInfo={userInfo}
+                gameHistories={gameHistories}
+                openLoginPanel={openLoginPanel}
+                enqueueMessage={enqueueMessage}
+              />
+              <LoadHistoryOption
+                userInfo={userInfo}
+                setGameHistories={setGameHistories}
+                openLoginPanel={openLoginPanel}
+                enqueueMessage={enqueueMessage}
+              />
             </View>
           </View>
         </View>
+        <Toast />
       </Modal>
     </>
   );

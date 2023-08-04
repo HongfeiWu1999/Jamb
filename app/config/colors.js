@@ -27,5 +27,5 @@ export default {
   brownGray: "#716969",
   winnerGreen: "#538f6a",
   darkRed2: "#D10000",
-  sinopia: "#dc2f02",
+  pantone: "#EF233C",
 };

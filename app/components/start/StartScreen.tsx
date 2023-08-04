@@ -1,15 +1,24 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { View, AppState } from "react-native";
+import {
+  View,
+  AppState,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+} from "react-native";
 import { Button } from "react-native-paper";
 import { Route } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../../database/firebase";
 
 import colors from "../../config/colors";
 import LoginScreen from "./login/LoginScreen";
-import { GameState, PanelVisibilityState, UserState } from "../../types/types";
+import {
+  GameSettings,
+  GameState,
+  PanelVisibilityState,
+  UserState,
+} from "../../types/types";
 import GameHistories from "./histories/GameHistories";
 import StartTitle from "./StartTitle";
 import {
@@ -38,6 +47,10 @@ const StartScreen: React.FC<StartScreenProps> = ({ navigation, route }) => {
   const [panelVisibilityState, setPanelVisibilityState] =
     useState<PanelVisibilityState>(initPanelVisbilityState());
 
+  const [gameSettings, setGameSettings] = useState<GameSettings>({
+    isVolumeOn: true,
+  });
+
   useEffect(() => {
     const getLocalHistories = async () => {
       const data = await AsyncStorage.getItem("@Game_Histories");
@@ -46,20 +59,6 @@ const StartScreen: React.FC<StartScreenProps> = ({ navigation, route }) => {
     };
     getLocalHistories();
   }, []);
-
-  const obtainUserGameHistories = useCallback(async () => {
-    if (userInfo) {
-      const userId = userInfo.id.toString();
-      const docSnap = await getDoc(doc(db, "users", userId));
-      let cloudHistories;
-      if (docSnap.exists()) {
-        cloudHistories = docSnap.data().histories;
-      } else {
-        cloudHistories = [null, null, null];
-      }
-      setGameHistories(cloudHistories);
-    }
-  }, [userInfo]);
 
   const openGameHistory = useCallback(() => {
     setPanelVisibilityState((prevState) => ({
@@ -118,15 +117,13 @@ const StartScreen: React.FC<StartScreenProps> = ({ navigation, route }) => {
     <View style={gameStyles.mainBackGround}>
       <StartTitle />
       <View style={commonStyles.flex1View}>
-        <Button
+        <TouchableOpacity
           onPress={openGameHistory}
-          mode="contained"
-          labelStyle={buttonStyles.buttonText}
-          buttonColor={colors.sinopia}
-          textColor="white"
+          style={styles.singleplayButton}
+          activeOpacity={0.8}
         >
-          Multiplayer
-        </Button>
+          <Text style={styles.singleplayerButtonText}>Start Game</Text>
+        </TouchableOpacity>
         <Button
           style={commonStyles.marginTop10}
           onPress={openMultiplayerPanel}
@@ -159,6 +156,8 @@ const StartScreen: React.FC<StartScreenProps> = ({ navigation, route }) => {
       <OptionPanel
         panelVisibility={panelVisibilityState.isOptionPanelVisible}
         setPanelVisibility={setPanelVisibilityState}
+        gameSettings={gameSettings}
+        setGameSettings={setGameSettings}
         userInfo={userInfo}
         setUserInfo={setUserInfo}
         gameHistories={gameHistories}
@@ -167,5 +166,19 @@ const StartScreen: React.FC<StartScreenProps> = ({ navigation, route }) => {
     </View>
   );
 };
+
+export const styles = StyleSheet.create({
+  singleplayButton: {
+    backgroundColor: colors.pantone,
+    paddingVertical: 7,
+    alignItems: "center",
+    borderRadius: 18.5,
+  },
+  singleplayerButtonText: {
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "white",
+  },
+});
 
 export default React.memo(StartScreen);

@@ -1,6 +1,6 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
-import colors from "../../../config/colors";
+import colors from "../../../../config/colors";
 
 interface OptionProps {
   onPress: any;
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 3,
     backgroundColor: "white",
     padding: 5,
-    borderRadius: 5,
+    borderRadius: 10,
     elevation: 3,
     justifyContent: "space-between",
     alignItems: "center",

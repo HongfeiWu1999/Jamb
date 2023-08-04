@@ -23,7 +23,7 @@ const GoBackAlert: React.FC<GoBackAlertProps> = ({
   setIsAlertVisible,
   navigation,
 }) => {
-  const hideAlert = useCallback(() => {
+  const closeAlert = useCallback(() => {
     setIsAlertVisible(false);
   }, [setIsAlertVisible]);
 
@@ -60,7 +60,7 @@ const GoBackAlert: React.FC<GoBackAlertProps> = ({
       title="Exiting Will Result in Game Loss!"
       body="Are you sure you want to exit the game? Exiting now will result in a loss for you, and your opponent will be declared the winner. Please reconsider your decision before proceeding."
       onAccept={backToStartScreen}
-      onReject={hideAlert}
+      onReject={closeAlert}
     />
   );
 };
